@@ -8,15 +8,18 @@ import java.util.ArrayList;
 
 public class FileScannerXML
 {
+    private final File xmlFile;
 
-    private File xmlFile;
-
+    /**
+     *
+     * @param xmlFile
+     */
     public FileScannerXML(File xmlFile)
     {
         this.xmlFile = xmlFile;
     }
 
-    public ArrayList<Game> parseXMLGame()
+    public ArrayList<Game> parseGamesFromXML()
     {
 
         ArrayList<Game> games = new ArrayList<>();
@@ -49,6 +52,13 @@ public class FileScannerXML
         return games;
     }
 
+    /**
+     *  Parses a single XML element representing a game and constructs {link @Game}
+     *  object.
+     *
+     * @param gameElement an XML parent node
+     * @return a {link @Game} object with attributes populated by the XML
+     */
     private Game parseGameElement(Element gameElement)
     {
 
@@ -62,7 +72,14 @@ public class FileScannerXML
         return new Game(id, name, desc, pubYear, minPlayers, maxPlayers);
     }
 
-
+    /**
+     * Gets the "value" of a child node by tag name.
+     *
+     * @param parent the parent XML node
+     * @param tag the child element's tag name
+     * @param defaultValue default return value if tag value is missing
+     * @return the attribute value, or defaultValue if missing
+     */
     private String getAttributeValue(Element parent, String tag, String defaultValue)
     {
 
@@ -76,6 +93,14 @@ public class FileScannerXML
         return defaultValue;
     }
 
+    /**
+     * Gets the text content of a child node by tag name.
+     *
+     * @param parent the parent XML node
+     * @param tag the child element's text content
+     * @param defaultValue default return value if text content is missing
+     * @return the child element's textContent, or defaultValue if missing
+     */
     private String getTextContent(Element parent, String tag, String defaultValue)
     {
 

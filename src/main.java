@@ -1,14 +1,16 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 
 public class main {
     public static void main (String []args) {
         File file = new File("bgg90Games.xml");
-        FileScannerXML GameDB = new FileScannerXML(file);
+        FileScannerXML scanner = new FileScannerXML(file);
 
-        List<Game> games = GameDB.parseXMLGame();
+        ArrayList<Game> gameList = scanner.parseGamesFromXML();
+        GameDatabase db = new GameDatabase(gameList);
 
-        for(Game g : games) {
+        for(Game g : db) {
             System.out.println(g);
         }
     }
