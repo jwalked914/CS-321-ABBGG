@@ -74,10 +74,11 @@ public class FileScannerXML
         String pubYear = getAttributeValue(gameElement, "yearpublished", "N/A");
         String minPlayers = getAttributeValue(gameElement, "minplayers", "N/A");
         String maxPlayers = getAttributeValue(gameElement, "maxplayers", "N/A");
+        String playingTime = getAttributeValue(gameElement, "playingTime", "N/A");
         ArrayList<String> categories = getTagList(gameElement,"link", "boardgamecategory");
         ArrayList<String> mechanics = getTagList(gameElement,"link", "boardgamemechanic");
 
-        return new Game(id, name, desc, pubYear, minPlayers, maxPlayers, categories, mechanics);
+        return new Game(id, name, desc, pubYear, minPlayers, maxPlayers, playingTime, categories, mechanics);
     }
 
     /**
