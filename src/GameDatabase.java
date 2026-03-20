@@ -4,6 +4,10 @@ public class GameDatabase
 {
     private ArrayList<Game> games;
 
+    /**
+     * Constructs a game database of Game objects
+     * @param gameDB parsed boardgame array list
+     */
     public GameDatabase(ArrayList<Game> gameDB)
     {
         this.games = gameDB;
@@ -11,7 +15,8 @@ public class GameDatabase
 
     public void printAllGames()
     {
-        for(Game g : games){
+        for(Game g : games)
+        {
             System.out.println(g);
         }
     }

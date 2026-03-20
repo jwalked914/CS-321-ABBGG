@@ -1,24 +1,11 @@
-/*
-Game Class needs for GameDB
-Game Model (Game class)
-
--Must store all standard attributes: id, name, description, bgCategory, bgMechanic, publishYear, minPlayers, maxPlayers.
-
--publishYear, minPlayers, and maxPlayers must be stored as int.
-
--Fields should be private final with public getters.
-
--Include a clean toString() for debugging/printing.
-
--Constructor should accept Strings from XML and convert numeric fields to int safely.
-
--Handle missing or malformed numeric values with sensible defaults (e.g., 1 for players, 0 for year).
-
--Javadoc Comments
- */
 
 import java.util.ArrayList;
 
+/**
+ *  Represents a board game with its core attributes.
+ *  Each Game object stores its unique ID, name, description, publication year,
+ *  minimum and maximum player counts, and lists of categories and mechanics.
+ */
 public class Game {
 
     private final String id;
@@ -30,6 +17,18 @@ public class Game {
     private final ArrayList<String> bgCategories;
     private final ArrayList<String> bgMechanics;
 
+    /**
+     * Constructs a game object from various parameters
+     *
+     * @param id the game id
+     * @param name the game name
+     * @param desc the game description
+     * @param pubYear the game publication year as a string
+     * @param minPlayer required minimum player count as string; returns as an int
+     * @param maxPlayer maximum player count; returns as an int
+     * @param bgCategories list of game categories
+     * @param bgMechanics list of game mechanics
+     */
     Game(String id, String name, String desc, String pubYear, String minPlayer, String maxPlayer, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
     {
         this.id = id;
@@ -42,7 +41,6 @@ public class Game {
         this.bgMechanics = new ArrayList<>(bgMechanics);
 
     }
-
 
     private int stringToInt(String num)
     {

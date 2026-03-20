@@ -9,14 +9,22 @@ public class FileScannerXML
     private final File xmlFile;
 
     /**
+     * Constructs a FileScannerXML with the given XML file.
      *
-     * @param xmlFile
+     * @param xmlFile the XML file to parse
      */
     public FileScannerXML(File xmlFile)
     {
         this.xmlFile = xmlFile;
     }
 
+
+    /**
+     * Parses the XML file and returns a list of Game objects.
+     *
+     * @return an ArrayList of Game objects extracted from the XML file
+     * @throws RuntimeException if there is an error reading or parsing the file
+     */
     public ArrayList<Game> parseGamesFromXML()
     {
 
@@ -114,6 +122,14 @@ public class FileScannerXML
         return defaultValue;
     }
 
+    /**
+     * Gets a tag list of a child node by tag and type.
+     *
+     * @param parent the parent XML node
+     * @param tag a link of child node
+     * @param filterType type filter for link
+     * @return list of string attributes based on filter
+     */
     private ArrayList<String> getTagList(Element parent, String tag, String filterType)
     {
         ArrayList<String> stringList = new ArrayList<>();
