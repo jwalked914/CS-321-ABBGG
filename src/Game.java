@@ -17,6 +17,8 @@ Game Model (Game class)
 -Javadoc Comments
  */
 
+import java.util.ArrayList;
+
 public class Game {
 
     private final String id;
@@ -25,15 +27,19 @@ public class Game {
     private final int pubYear;
     private final int minPlayer;
     private final int maxPlayer;
+    private final ArrayList<String> bgCategories;
+    private final ArrayList<String> bgMechanics;
 
-    Game(String id, String name, String desc, String pubYear, String minPlayer, String maxPlayer){
-
+    Game(String id, String name, String desc, String pubYear, String minPlayer, String maxPlayer, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
+    {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.pubYear = stringToInt(pubYear);
         this.minPlayer = stringToInt(minPlayer);
         this.maxPlayer = stringToInt(maxPlayer);
+        this.bgCategories = new ArrayList<>(bgCategories);
+        this.bgMechanics = new ArrayList<>(bgMechanics);
 
     }
 
@@ -51,9 +57,15 @@ public class Game {
     }
 
     @Override
-    public String toString(){
-        return "GameID: " + id + '\n' + "Name: " + name + '\n' + "Year: " + pubYear + '\n' +
-                "Description: " + desc + '\n' + "Minimum Players: " + minPlayer + '\n' + "Maximum Players: " + maxPlayer +
-                '\n' + "-------------------------------";
+    public String toString()
+    {
+        return "GameID: " + id + '\n' +
+                "Name: " + name + '\n' +
+                "Year: " + pubYear + '\n' +
+                "Description: " + desc + '\n' +
+                "Minimum Players: " + minPlayer + '\n' +
+                "Maximum Players: " + maxPlayer + '\n' +
+                "Categories: " + bgCategories + '\n' + "Mechanics: " + bgMechanics + '\n' +
+                "-------------------------------\n";
     }
 }

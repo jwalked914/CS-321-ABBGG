@@ -10,8 +10,6 @@ public class main {
         ArrayList<Game> gameList = scanner.parseGamesFromXML();
         GameDatabase db = new GameDatabase(gameList);
 
-        for(Game g : db) {
-            System.out.println(g);
-        }
+        db.printAllGames();
     }
 }

@@ -4,8 +4,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 
-
-
 public class FileScannerXML
 {
     private final File xmlFile;
@@ -68,8 +66,10 @@ public class FileScannerXML
         String pubYear = getAttributeValue(gameElement, "yearpublished", "N/A");
         String minPlayers = getAttributeValue(gameElement, "minplayers", "N/A");
         String maxPlayers = getAttributeValue(gameElement, "maxplayers", "N/A");
+        ArrayList<String> categories = getTagList(gameElement,"link", "boardgamecategory");
+        ArrayList<String> mechanics = getTagList(gameElement,"link", "boardgamemechanic");
 
-        return new Game(id, name, desc, pubYear, minPlayers, maxPlayers);
+        return new Game(id, name, desc, pubYear, minPlayers, maxPlayers, categories, mechanics);
     }
 
     /**
@@ -112,6 +112,29 @@ public class FileScannerXML
         }
 
         return defaultValue;
+    }
+
+    private ArrayList<String> getTagList(Element parent, String tag, String filterType)
+    {
+        ArrayList<String> stringList = new ArrayList<>();
+
+        NodeList nodeList = parent.getElementsByTagName(tag);
+
+        for(int i = 0; i < nodeList.getLength(); i++)
+        {
+            Node node = nodeList.item(i);
+
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            Element element = (Element) node;
+
+            if (filterType.equals(element.getAttribute("type")))
+            {
+                stringList.add(element.getAttribute("value"));
+            }
+        }
+        return stringList;
     }
 
 }
