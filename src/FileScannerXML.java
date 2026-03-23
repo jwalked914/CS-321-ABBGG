@@ -4,6 +4,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Parses a board game XML file and converts its contents into
+ * {@link Game} objects.
+ *
+ * <p>This class is responsible only for reading and interpreting XML data.
+ * It does not store or manage games after parsing. The resulting list
+ * is intended to be passed to a {@code GameDatabase}.</p>
+ */
 public class FileScannerXML
 {
     private final File xmlFile;
@@ -42,7 +50,8 @@ public class FileScannerXML
             for (int i = 0; i < gameList.getLength(); i++) {
                 Node node = gameList.item(i);
 
-                if (node.getNodeType() != Node.ELEMENT_NODE) continue;
+                if (node.getNodeType() != Node.ELEMENT_NODE)
+                    continue;
 
                 Element game = (Element) node;
 
@@ -52,7 +61,7 @@ public class FileScannerXML
                 games.add(parseGameElement(game));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to parse XML", e);
         }
 
         return games;
@@ -70,6 +79,8 @@ public class FileScannerXML
 
         String id = gameElement.getAttribute("id");
         String name = getAttributeValue(gameElement, "name", "N/A");
+        String thumbnailURL = getTextContent(gameElement, "thumbnail", "N/A");
+        String imageURL = getTextContent(gameElement, "image", "N/A");
         String desc = getTextContent(gameElement, "description", "Unknown");
         String pubYear = getAttributeValue(gameElement, "yearpublished", "N/A");
         String minPlayers = getAttributeValue(gameElement, "minplayers", "N/A");
@@ -78,7 +89,7 @@ public class FileScannerXML
         ArrayList<String> categories = getTagList(gameElement,"link", "boardgamecategory");
         ArrayList<String> mechanics = getTagList(gameElement,"link", "boardgamemechanic");
 
-        return new Game(id, name, desc, pubYear, minPlayers, maxPlayers, playingTime, categories, mechanics);
+        return new Game(id, name, thumbnailURL, imageURL, desc, pubYear, minPlayers, maxPlayers, playingTime, categories, mechanics);
     }
 
     /**
