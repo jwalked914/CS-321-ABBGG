@@ -20,7 +20,7 @@ public class Collection extends GameDatabase
      * @param  gameIDs collection
      * @param name display collection name
      */
-    public Collection(String name, ArrayyList<Game> gameDB)
+    public Collection(String name, ArrayList<Game> gameDB)
     {
         super(gameDB);
         this.name = name;
