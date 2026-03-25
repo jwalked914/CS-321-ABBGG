@@ -34,7 +34,8 @@ public class Game {
      * @param bgCategories list of game categories
      * @param bgMechanics list of game mechanics
      */
-    Game(String id, String name, String thumbnailURL, String imageURL, String desc, String pubYear, String minPlayer, String maxPlayer, String playingTime, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
+    Game(String id, String name, String thumbnailURL, String imageURL, String desc, String pubYear, String minPlayer,
+         String maxPlayer, String playingTime, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
     {
         this.id = stringToInt(id);
         this.name = name;
