@@ -26,7 +26,6 @@ public class FileScannerXML
         this.xmlFile = xmlFile;
     }
 
-
     /**
      * Parses the XML file and returns a list of Game objects.
      *
@@ -93,7 +92,7 @@ public class FileScannerXML
     }
 
     /**
-     * Gets the "value" of a child node by tag name.
+     * Returns the "value" of a child node by tag name.
      *
      * @param parent the parent XML node
      * @param tag the child element's tag name
@@ -114,7 +113,7 @@ public class FileScannerXML
     }
 
     /**
-     * Gets the text content of a child node by tag name.
+     * Returns the text content of a child node by tag name.
      *
      * @param parent the parent XML node
      * @param tag the child element's text content
@@ -135,7 +134,7 @@ public class FileScannerXML
     }
 
     /**
-     * Gets a tag list of a child node by tag and type.
+     * Returns a tag list of a child node by tag and type.
      *
      * @param parent the parent XML node
      * @param tag a link of child node

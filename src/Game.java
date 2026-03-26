@@ -1,5 +1,3 @@
-
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +24,8 @@ public class Game {
      *
      * @param id the game id
      * @param name the game name
+     * @param thumbnailURL the game thumbnail image URL
+     * @param imageURL the game image URL
      * @param desc the game description
      * @param pubYear the game publication year as a string
      * @param minPlayer required minimum player count as string; returns as an int
