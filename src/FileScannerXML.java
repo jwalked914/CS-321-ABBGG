@@ -82,9 +82,9 @@ public class FileScannerXML
         String imageURL = getTextContent(gameElement, "image", "N/A");
         String desc = getTextContent(gameElement, "description", "Unknown");
         String pubYear = getAttributeValue(gameElement, "yearpublished", "N/A");
-        String minPlayers = getAttributeValue(gameElement, "minplayers", "N/A");
-        String maxPlayers = getAttributeValue(gameElement, "maxplayers", "N/A");
-        String playingTime = getAttributeValue(gameElement, "playingTime", "N/A");
+        String minPlayers = getAttributeValue(gameElement, "minplayers", "1");
+        String maxPlayers = getAttributeValue(gameElement, "maxplayers", "1");
+        String playingTime = getAttributeValue(gameElement, "playingtime", "1");
         ArrayList<String> categories = getTagList(gameElement,"link", "boardgamecategory");
         ArrayList<String> mechanics = getTagList(gameElement,"link", "boardgamemechanic");
 

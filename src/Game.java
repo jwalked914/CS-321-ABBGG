@@ -131,13 +131,23 @@ public class Game {
     }
 
     /**
+     *  Return the game's average play time
+     *
+     * @return game average playtime
+     */
+    public int getPlayingTime()
+    {
+        return playingTime;
+    }
+
+    /**
      * Returns a list of a game's playstyle categories.
      *
      * @return list of game categories
      */
     public ArrayList<String> getBgCategories()
     {
-        return bgCategories;
+        return new ArrayList<>(bgCategories);
     }
 
     /**
@@ -147,7 +157,7 @@ public class Game {
      */
     public ArrayList<String> getBgMechanics()
     {
-        return bgMechanics;
+        return new ArrayList<>(bgMechanics);
     }
 
     /**

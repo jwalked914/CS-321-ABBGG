@@ -18,7 +18,7 @@ public class GameDatabase
     private HashMap<String, HashSet<Game>> mechanicMap;
 
     /**
-     * Constructs a game database of Game objects
+     * Constructs a game database of Game objects.
      * @param gameDB parsed boardgame array list
      */
     public GameDatabase(ArrayList<Game> gameDB)
@@ -38,15 +38,22 @@ public class GameDatabase
         }
     }
 
+
+    /**
+     * Returns a copy of a list of all games within a game database.
+     *
+     * @return list of games within game database
+     */
     public ArrayList<Game> getAllGames()
     {
         return new ArrayList<>(games);
     }
 
     /**
+     *  Returns a game based on unique id.
      *
-     * @param id
-     * @return
+     * @param id game ID
+     * @return game object that matches id
      */
     public Game getGameById(int id)
     {
@@ -71,7 +78,7 @@ public class GameDatabase
     }
 
     /**
-     * Returns all unique mechanics
+     * Returns all unique mechanics.
      *
      * @return list of mechanics
      */
@@ -81,7 +88,7 @@ public class GameDatabase
     }
 
     /**
-     * Returns games that match user query
+     * Returns games that match user query.
      *
      * @param Query user inputted string
      * @return list of games matching user query
@@ -108,9 +115,10 @@ public class GameDatabase
     }
 
     /**
+     *  Filters games within a game database by a collection of categories.
      *
-     * @param selectedCategories
-     * @return
+     * @param selectedCategories a collection of category names; maybe null or empty
+     * @return list of game objects that fit the selected categories
      */
     public ArrayList<Game> filterByCategory(Collection<String> selectedCategories)
     {
@@ -137,9 +145,10 @@ public class GameDatabase
     }
 
     /**
+     * Filters games within a game database by a collection of mechanics.
      *
-     * @param selectedMechanics
-     * @return
+     * @param selectedMechanics a collection of mechanics; maybe null or empty
+     * @return list of game objects that fit the selected mechanics
      */
     public ArrayList<Game> filterByMechanic(Collection<String> selectedMechanics)
     {
@@ -166,7 +175,11 @@ public class GameDatabase
     }
 
     /**
+     *  Filters games within a game database by a collection of categories and mechanics.
      *
+     * @param selectedCategories a collection of category names; maybe null or empty
+     * @param selectedMechanics a collection of mechanics; maybe null or empty
+     * @return list of game objects that fit the selected criteria
      */
     public ArrayList<Game> filterByCategoryAndMechanic(Collection<String> selectedCategories, Collection<String> selectedMechanics)
     {
