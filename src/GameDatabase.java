@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Represents a database of board games that provides access to and
@@ -43,7 +40,7 @@ public class GameDatabase
 
     public ArrayList<Game> getAllGames()
     {
-        return games;
+        return new ArrayList<>(games);
     }
 
     /**
@@ -115,7 +112,7 @@ public class GameDatabase
      * @param selectedCategories
      * @return
      */
-    public ArrayList<Game> filterByCategory(HashSet<String> selectedCategories)
+    public ArrayList<Game> filterByCategory(Collection<String> selectedCategories)
     {
         // empty selection
         if(selectedCategories == null || selectedCategories.isEmpty())
@@ -124,7 +121,6 @@ public class GameDatabase
         }
 
         Iterator<String> iter = selectedCategories.iterator();
-        if(!iter.hasNext()) return new ArrayList<>();
 
         // iterate through first categories set
         HashSet<Game> intersection = new HashSet<>(categoryMap.getOrDefault(iter.next(), new HashSet<>()));
@@ -136,7 +132,6 @@ public class GameDatabase
             HashSet<Game> catSet = categoryMap.getOrDefault(cat, new HashSet<>());
             intersection.retainAll(catSet);
         }
-        System.out.println(intersection);
 
         return new ArrayList<>(intersection);
     }
@@ -146,7 +141,7 @@ public class GameDatabase
      * @param selectedMechanics
      * @return
      */
-    public ArrayList<Game> filterByMechanic(HashSet<String> selectedMechanics)
+    public ArrayList<Game> filterByMechanic(Collection<String> selectedMechanics)
     {
         // empty selection
         if(selectedMechanics == null || selectedMechanics.isEmpty())
@@ -155,7 +150,6 @@ public class GameDatabase
         }
 
         Iterator<String> iter = selectedMechanics.iterator();
-        if(!iter.hasNext()) return new ArrayList<>();
 
         // iterate through first categories set
         HashSet<Game> intersection = new HashSet<>(mechanicMap.getOrDefault(iter.next(), new HashSet<>()));
@@ -163,13 +157,41 @@ public class GameDatabase
         // intersect with the rest
         while(iter.hasNext())
         {
-            String cat = iter.next();
-            HashSet<Game> mechSet = mechanicMap.getOrDefault(cat, new HashSet<>());
+            String mech = iter.next();
+            HashSet<Game> mechSet = mechanicMap.getOrDefault(mech, new HashSet<>());
             intersection.retainAll(mechSet);
         }
-        System.out.println(intersection);
 
         return new ArrayList<>(intersection);
+    }
+
+    /**
+     *
+     */
+    public ArrayList<Game> filterByCategoryAndMechanic(Collection<String> selectedCategories, Collection<String> selectedMechanics)
+    {
+        boolean noCategories = selectedCategories == null || selectedCategories.isEmpty();
+        boolean noMechanics = selectedMechanics == null || selectedMechanics.isEmpty();
+
+        if (noCategories && noMechanics) // no category or mechanic selected
+        {
+            return new ArrayList<>(games);
+        }
+
+        if(noCategories) // no categories selected
+        {
+            return filterByMechanic(selectedMechanics);
+        }
+
+        if(noMechanics) // no mechanics selected
+        {
+            return filterByCategory(selectedCategories);
+        }
+
+        HashSet<Game> resultSet = new HashSet<>(filterByCategory(selectedCategories)); // categories and mechanics selected
+        resultSet.retainAll(filterByMechanic(selectedMechanics));
+
+        return new ArrayList<>(resultSet);
     }
 
     /**
@@ -178,6 +200,8 @@ public class GameDatabase
      */
     private void buildCategoryAndMechanicSets()
     {
+
+
         allCategories = new HashSet<>();
         allMechanics = new HashSet<>();
 
