@@ -1,99 +1,92 @@
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Collection class allows users to store unlimited games
  * and create unlimited amount of collections
+ * It also inherits from the GameDatabase to access the full game library
  */
 
-public class Collection
+public class UserCollection extends GameDatabase
 {
-    /** Is an Id for identifying a certain collection */
-    private int id;
+    /** This displays the name of the Colelction*/
+    private String name;
 
-    /** This will display the collection's name */
-    private String name ;
+    /** List of the games ID String that is in the collection*/
+    private ArrayList<String> gameIds;
 
-    /**
-     * List of games in this collection
-     */
-    private List<String> games;
+    /** Is the GameDatabase that helps validate and locate games in collection */
+    private GameDatabase gameDB;
 
-    /**
-     *  Name and list of Collections made in the library
-     */
-    private List<Collection> subCollections;
 
-    /**
-     * Creates a new collection with a given ID and name.
-     * @param id collection id
-     * @param name display collection name
-     */
-    public Collection(int id,String name)
+    /** 
+    * This is a Constructor that creates a new Collection 
+    * @param name displays the collection's name
+    * @param gameDB This validates if the game exist, or is already in a collection
+    */
+    public UserCollection(String name, GameDatabase gameDB)
     {
-        this.id = id;
+        super(gameDB.getAllGames());
         this.name = name;
-        this.games = new ArrayList<>();
-        this.subCollections = new ArrayList<>();
+        this.gameDB = gameDB;
+        this.gameIds = new ArrayList<>();
+    }
+
+    
+    /**
+    * This is a method that adds game into a collection by its Id
+    * This checks and validates if a game exist or is already in the collection
+    */
+    public void addGame(String gameId)
+    {
+        // This checks if the game exists 
+        Game g = gameDB.getGameById(Integer.parseInt(gameId));
+        if (g == null) return;
+
+        // This checks if the game is already in the collection
+        if (containsGame(gameId)) return;
+
+        // This adds the game into the collection onces everything is checked
+        gameIds.add(gameId);
+    }
+
+
+    /**
+    * This is a method that removes the game 
+    * This validates if the game is alreadyy not in the list
+    */
+    public void removeGame(String gameId)
+    {
+        // Checks if the game is alreadyy not in the list
+        if (!containsGame(gameId)) return;
+
+        // Removes the game if it is in the list
+        gameIds.remove(gameId);
+    }
+    
+
+    /**
+    * This method checks if the game exists
+    */
+    public boolean containsGame(String gameId)
+    {
+        return gameIds.contains(gameId);
     }
 
     /**
-     * Methods
-     * addGame adds a game to the list
-     * removeGame would remove the game from a list
-     */
-
-    public void addGame(String game)
-    {
-        games.add(game);
-    }
-
-    public void removeGame(String game)
-    {
-        games.remove(game);
-    }
-
-    /**
-     * method to add a collection and remove a collection
-     * @param collection adds a collection into a collection
-     */
-
-    public void addSubCollection(Collection collection)
-    {
-        subCollections.add(collection);
-    }
-
-    public void removeSubcollection(Collection collection)
-    {
-        subCollections.remove(collection);
-    }
-
-    /**
-     *
-     * @return
-     * the id of Collection
-     * name of Collection
-     * games in the Collection
-     * the nested Collection or SubCollection in the collection
-     */
-    public int getId()
-    {
-        return id;
-    }
-
+    * This gets the name of the name of the collection
+    */
     public String getName()
     {
         return name;
     }
 
-    public List<String> getGames()
-    {
-        return games;
-    }
 
-    public List<Collection> getSubCollections()
+    /**
+    * This method stores the changes you made in users collection
+    */
+    public ArrayList<String> getGameIds()
     {
-        return subCollections;
+        return new ArrayList<>(gameIds);
     }
-
 }
