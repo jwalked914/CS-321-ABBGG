@@ -9,10 +9,10 @@ import java.util.ArrayList;
  */
 public class User
 {
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
     private final Boolean isAdmin;
-    private final ArrayList<collections> collections;
+    private final ArrayList<UserCollection> collections;
     // private final ArrayList<review> reviews;
 
     /**
@@ -25,13 +25,13 @@ public class User
      * @param review and array that contains the user's reviews
      */
 
-    User(String username, String password, Boolean isAdmin, ArrayList<collections> collections,
-         ArrayList<review> reviews)
+    User(String username, String password, Boolean isAdmin, ArrayList<UserCollection> collections)
+         //ArrayList<review> reviews)
     {
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
-        this.collections = new ArrayList<>();
+        this.collections = collections;
         // this.reviews = new ArrayList<>();
     }
 
@@ -41,7 +41,7 @@ public class User
 
     public void setUsername(String username)
     {
-        User.username = username;
+        this.username = username;
     }
 
     /**
@@ -70,9 +70,9 @@ public class User
      * sets the password of the user when they are logging in for the first time
      */
 
-    public void setPassword()
+    public void setPassword(String password)
     {
-        User.password = password;
+        this.password = password;
     }
 
     /**
@@ -87,7 +87,30 @@ public class User
     }
 
     /**
-     * returns
+     * returns Collection
+     *
+     * @return collection
      */
+    public ArrayList<UserCollection> getCollections()
+    {
+        return collections;
+    }
+
+    /**
+     * Creates a collection
+     */
+    public void createCollection(String name)
+    {
+        collections.add(new UserCollection(name, gameDB));
+    }
+
+    /**
+     * Delete a collection
+     */
+    public void deleteCollection(String name)
+    {
+        
+    }
+
 
 }
