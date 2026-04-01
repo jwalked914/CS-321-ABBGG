@@ -10,18 +10,18 @@ import java.util.*;
  */
 public class GameDatabase
 {
-    private final ArrayList<Game> games;
-    private HashSet<String> allCategories;
-    private HashSet<String> allMechanics;
-    private HashMap<String, HashSet<Game>> wordMap;
-    private HashMap<String, HashSet<Game>> categoryMap;
-    private HashMap<String, HashSet<Game>> mechanicMap;
+    protected ArrayList<Game> games;
+    protected HashSet<String> allCategories;
+    protected HashSet<String> allMechanics;
+    protected HashMap<String, HashSet<Game>> wordMap;
+    protected HashMap<String, HashSet<Game>> categoryMap;
+    protected HashMap<String, HashSet<Game>> mechanicMap;
 
     /**
-     * Constructs a game database of Game objects.
+     * Constructs a master game database of Game objects.
      * @param gameDB parsed boardgame array list
      */
-    public GameDatabase(ArrayList<Game> gameDB)
+    protected GameDatabase(ArrayList<Game> gameDB)
     {
         this.games = gameDB;
         buildCategoryAndMechanicSets();
@@ -29,6 +29,21 @@ public class GameDatabase
         buildCategoryMap();
         buildMechanicMap();
     }
+
+    /**
+     * Empty Constructor for user collections
+     */
+    protected GameDatabase()
+    {
+        this.games = new ArrayList<>();
+        this.allCategories = new HashSet<>();
+        this.allMechanics = new HashSet<>();
+        this.wordMap = new HashMap<>();
+        this.categoryMap = new HashMap<>();
+        this.mechanicMap = new HashMap<>();
+
+    }
+
 
     public void printAllGames()
     {
@@ -208,6 +223,38 @@ public class GameDatabase
     }
 
     /**
+     * Adds game's categories, mechanics, and words to a collection's map.
+     *
+     * @param g game object
+     */
+    protected void addToMaps(Game g)
+    {
+        games.add(g);
+
+        allCategories.addAll(g.getBgCategories());
+        allMechanics.addAll(g.getBgMechanics());
+
+        String[] words =g.getName().toLowerCase().split("\\s+");
+        for(String word: words)
+        {
+            wordMap.computeIfAbsent(word, k-> new HashSet<>()).add(g);
+        }
+        for(String cat: g.getBgCategories())
+        {
+            categoryMap.computeIfAbsent(cat, k -> new HashSet<>()).add(g);
+        }
+        for(String mech: g.getBgMechanics())
+        {
+            mechanicMap.computeIfAbsent(mech, k -> new HashSet<>()).add(g);
+        }
+    }
+
+    protected void addGame(Game g)
+    {
+        addToMaps(g);
+    }
+
+    /**
      * Builds unique sets for categories and mechanics for filter drop down.
      *
      */
@@ -238,12 +285,7 @@ public class GameDatabase
             for(String cat: categories)
             {
                 HashSet<Game> set = categoryMap.get(cat);
-                if(set == null)
-                {
-                    set = new HashSet<>();
-                    categoryMap.put(cat,set);
-                }
-                set.add(g);
+                categoryMap.computeIfAbsent(cat, k -> new HashSet<>()).add(g);
             }
         }
     }
@@ -261,12 +303,7 @@ public class GameDatabase
             for(String mech: mechanics)
             {
                 HashSet<Game> set = mechanicMap.get(mech);
-                if(set == null)
-                {
-                    set = new HashSet<>();
-                    mechanicMap.put(mech,set);
-                }
-                set.add(g);
+                mechanicMap.computeIfAbsent(mech, k -> new HashSet<>()).add(g);
             }
         }
     }
