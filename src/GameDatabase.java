@@ -250,6 +250,20 @@ public class GameDatabase
     }
 
     /**
+     *  Removes game from game list, and then rebuilds collection maps
+     *
+     * @param g game object
+     */
+    protected void removeFromMaps(Game g)
+    {
+        games.remove(g);
+        buildCategoryAndMechanicSets();
+        buildWordMap();
+        buildCategoryMap();
+        buildMechanicMap();
+    }
+
+    /**
      *  Parent pass for collection maps.
      *
      * @param g
