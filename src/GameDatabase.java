@@ -31,7 +31,7 @@ public class GameDatabase
     }
 
     /**
-     * Empty Constructor for user collections
+     * Empty Constructor for user collections.
      */
     protected GameDatabase()
     {
@@ -223,7 +223,7 @@ public class GameDatabase
     }
 
     /**
-     * Adds game's categories, mechanics, and words to a collection's map.
+     * Adds game's categories, mechanics, and words to a collection's maps.
      *
      * @param g game object
      */
@@ -249,6 +249,11 @@ public class GameDatabase
         }
     }
 
+    /**
+     *  Parent pass for collection maps.
+     *
+     * @param g
+     */
     protected void addGame(Game g)
     {
         addToMaps(g);
