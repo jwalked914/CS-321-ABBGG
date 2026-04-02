@@ -1,92 +1,78 @@
-import java.util.ArrayList;
-
-
 /**
  * Collection class allows users to store unlimited games
  * and create unlimited amount of collections
  * It also inherits from the GameDatabase to access the full game library
  */
 
+
+
+
+/**
+ * UserCollection inherits GameDatabase
+ * This class will have methods that add, remove, and shows that it contains the users games
+ */
 public class UserCollection extends GameDatabase
 {
-    /** This displays the name of the Colelction*/
     private String name;
-
-    /** List of the games ID String that is in the collection*/
-    private ArrayList<String> gameIds;
-
-    /** Is the GameDatabase that helps validate and locate games in collection */
-    private GameDatabase gameDB;
+    private GameDatabase masterDB;
 
 
-    /** 
-    * This is a Constructor that creates a new Collection 
-    * @param name displays the collection's name
-    * @param gameDB This validates if the game exist, or is already in a collection
-    */
-    public UserCollection(String name, GameDatabase gameDB)
+    /**
+     *  This is a  constructor that creates an empty collection with a name.
+     *  the masterDB will be used to check if the game is real and store the game into a collection and be used to retrieve it as well.
+     */
+    public UserCollection(String name, GameDatabase masterDB)
     {
-        super(gameDB.getAllGames());
+        super();
         this.name = name;
-        this.gameDB = gameDB;
-        this.gameIds = new ArrayList<>();
+        this.masterDB = masterDB;
     }
 
-    
+
     /**
-    * This is a method that adds game into a collection by its Id
-    * This checks and validates if a game exist or is already in the collection
-    */
+     * This method Adds a game by ID to a collection
+     * It checks if the game does not exist in the master database then returns nothing if it actually doesn't exist.
+     * It also checks if the game is already in the collection and if not then it adds the game to the collection.
+     * @param gameId this is the gameID
+     */
     public void addGame(String gameId)
     {
-        // This checks if the game exists 
-        Game g = gameDB.getGameById(Integer.parseInt(gameId));
+        Game g = masterDB.getGameById(Integer.parseInt(gameId));
         if (g == null) return;
-
-        // This checks if the game is already in the collection
         if (containsGame(gameId)) return;
-
-        // This adds the game into the collection onces everything is checked
-        gameIds.add(gameId);
+        super.addGame(g);
     }
 
 
     /**
-    * This is a method that removes the game 
-    * This validates if the game is alreadyy not in the list
-    */
+     * This checks if the game exists and if it already is not in the collection
+     * if it is in the collection, then it deletes the gameid from the collection.
+     * @param gameId
+     */
     public void removeGame(String gameId)
     {
-        // Checks if the game is alreadyy not in the list
+        Game g = masterDB.getGameById(Integer.parseInt(gameId));
         if (!containsGame(gameId)) return;
-
-        // Removes the game if it is in the list
-        gameIds.remove(gameId);
+        super.removeFromMaps(g);
     }
-    
 
     /**
-    * This method checks if the game exists
-    */
+     * This checks if the collection contains the game ID
+     * @param gameId
+     * @return this returns if the game in the collection or not by boolean, true or false.
+     */
+
     public boolean containsGame(String gameId)
     {
-        return gameIds.contains(gameId);
+        return getGameById(Integer.parseInt(gameId)) != null;
     }
 
     /**
-    * This gets the name of the name of the collection
-    */
+     * This returns the name of the Collection
+     * @return the name of the collection
+     */
     public String getName()
     {
         return name;
-    }
-
-
-    /**
-    * This method stores the changes you made in users collection
-    */
-    public ArrayList<String> getGameIds()
-    {
-        return new ArrayList<>(gameIds);
     }
 }
