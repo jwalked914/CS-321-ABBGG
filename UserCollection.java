@@ -14,7 +14,7 @@
 public class UserCollection extends GameDatabase
 {
     private String name;
-    private GameDatabase masterDB;
+    private final GameDatabase masterDB;
 
 
     /**
@@ -33,38 +33,37 @@ public class UserCollection extends GameDatabase
      * This method Adds a game by ID to a collection
      * It checks if the game does not exist in the master database then returns nothing if it actually doesn't exist.
      * It also checks if the game is already in the collection and if not then it adds the game to the collection.
-     * @param gameId this is the gameID
+     * @param game add game
      */
-    public void addGame(String gameId)
+    public void addGame(Game game)
     {
-        Game g = masterDB.getGameById(Integer.parseInt(gameId));
-        if (g == null) return;
-        if (containsGame(gameId)) return;
-        super.addGame(g);
+        if (!masterDB.getAllGames().contains(game)) return;
+        if (getAllGames().contains(game)) return;
+        super.addGame(game);
     }
 
 
     /**
      * This checks if the game exists and if it already is not in the collection
-     * if it is in the collection, then it deletes the gameid from the collection.
-     * @param gameId
+     * if it is in the collection, then it deletes the game from the collection.
+     * @param game remove game
      */
-    public void removeGame(String gameId)
+    public void removeGame(Game game)
     {
-        Game g = masterDB.getGameById(Integer.parseInt(gameId));
-        if (!containsGame(gameId)) return;
-        super.removeFromMaps(g);
+
+        if (!getAllGames().contains(game)) return;
+        super.removeFromMaps(game);
     }
 
     /**
      * This checks if the collection contains the game ID
-     * @param gameId
+     * @param game
      * @return this returns if the game in the collection or not by boolean, true or false.
      */
 
-    public boolean containsGame(String gameId)
+    public boolean containsGame(Game game)
     {
-        return getGameById(Integer.parseInt(gameId)) != null;
+        return getAllGames().contains(game);
     }
 
     /**
@@ -76,3 +75,4 @@ public class UserCollection extends GameDatabase
         return name;
     }
 }
+
