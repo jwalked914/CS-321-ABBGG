@@ -101,7 +101,7 @@ public class User
      */
     public void createCollection(String name)
     {
-        collections.add(new UserCollection(name, gameDB));
+        collections.add(new UserCollection(name));
     }
 
     /**
