@@ -13,6 +13,7 @@ public class User
     private String password;
     private final Boolean isAdmin;
     private final ArrayList<UserCollection> collections;
+    private final GameDataBase gameDB;
     // private final ArrayList<review> reviews;
 
     /**
@@ -101,7 +102,7 @@ public class User
      */
     public void createCollection(String name)
     {
-        collections.add(new UserCollection(name));
+        collections.add(new UserCollection(name, gameDB));
     }
 
     /**
