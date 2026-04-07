@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
+import javax.swing.*;
 
 public class main {
     public static void main (String []args) {
@@ -10,8 +11,20 @@ public class main {
 
         ArrayList<Game> gameList = scanner.parseGamesFromXML();
         GameDatabase db = new GameDatabase(gameList);
-        db.filterByCategory(new HashSet<>(Collections.singleton("Adventure")));
-        db.filterByMechanic(new HashSet<>(Collections.singleton("Deck Construction")));
+
+        SwingUtilities.invokeLater(()->
+        {
+            JFrame frame = new JFrame("ABBGG");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(900,700);
+
+            GameBrowserPanel panel = new GameBrowserPanel(db);
+            frame.add(panel);
+
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.requestFocusInWindow();
+        });
 
     }
 }
