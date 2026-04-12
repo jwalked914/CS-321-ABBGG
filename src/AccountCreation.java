@@ -6,12 +6,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class AccountCreation {
-    static final Color DARK  = new Color(0x72, 0x7D, 0x73);
-    static final Color MID   = new Color(0xAA, 0xB9, 0x9A);
-    static final Color LIGHT = new Color(0xD0, 0xDD, 0xD0);
-    static final Color CREAM = new Color(0xF0, 0xF0, 0xD7);
-    static final Color WHITE = new Color(0xFF, 0xFF, 0xFF);
-    static final Color ERR   = new Color(0xB0, 0x4A, 0x4A);
 
     private JPanel accountCreationPanel;
     private JTextField     usernameField;
@@ -42,7 +36,7 @@ public class AccountCreation {
 
         //Outer background panel to fill the whole window with CREAM
         JPanel background=new JPanel(new GridBagLayout());
-        background.setBackground(CREAM);
+        background.setBackground(GUIColors.CREAM);
         background.setBorder(new EmptyBorder(60,60,60,60));
         frame.add(background);
         background.add(buildCard(frame)); // white rounded card in center of screen
@@ -51,7 +45,7 @@ public class AccountCreation {
 
     private JPanel buildCard(JFrame frame)
     {
-        accountCreationPanel=new RoundedPanel(20,LIGHT);
+        accountCreationPanel=new RoundedPanel(20,GUIColors.LIGHT);
         accountCreationPanel.setLayout(new BoxLayout(accountCreationPanel, BoxLayout.Y_AXIS));
         accountCreationPanel.setBorder(new EmptyBorder(60,150,60,150));
         accountCreationPanel.setPreferredSize(new Dimension(1500,900));
@@ -59,17 +53,17 @@ public class AccountCreation {
         //username field
         JLabel userLabel= new JLabel("Username");
         userLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        userLabel.setForeground(DARK);
+        userLabel.setForeground(GUIColors.DARK);
 
         //password tag
         JLabel passLabel= new JLabel("Password");
         passLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        passLabel.setForeground(DARK);
+        passLabel.setForeground(GUIColors.DARK);
 
         // confirm password field
         JLabel confirmLabel= new JLabel("Confirm Password");
         confirmLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        confirmLabel.setForeground(DARK);
+        confirmLabel.setForeground(GUIColors.DARK);
 
         usernameField = new JTextField(80);
         passwordField = new JPasswordField(80);
@@ -78,7 +72,7 @@ public class AccountCreation {
         //status label
         statusLabel=new JLabel(" ");
         statusLabel.setFont(new Font("Segoe UI",Font.PLAIN,11));
-        statusLabel.setForeground(ERR);
+        statusLabel.setForeground(GUIColors.ERR);
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //login button
@@ -194,7 +188,7 @@ public class AccountCreation {
             setContentAreaFilled(false);
             setFocusPainted(false);
             setFont(new Font("Segoe UI", Font.BOLD,14));
-            setForeground(WHITE);
+            setForeground(GUIColors.WHITE);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             setPreferredSize(new Dimension(290,50));
             //setMaximumSize(new Dimension(290,50));
@@ -224,7 +218,7 @@ public class AccountCreation {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(hover ? MID : DARK);
+            g2.setColor(hover ? GUIColors.MID : GUIColors.DARK);
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 10, 10));
             g2.dispose();
             super.paintComponent(g);
