@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class AccountCreation {
@@ -14,6 +16,9 @@ public class AccountCreation {
     private JPanel accountCreationPanel;
     private JTextField     usernameField;
     private JPasswordField passwordField;
+    private JPasswordField confirmField;
+    private JLabel         statusLabel;
+    private JButton         createAccountButton;
     // private UserDatabase userDB;
 
     public static void main(String[] args) {
@@ -61,8 +66,48 @@ public class AccountCreation {
         passLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
         passLabel.setForeground(DARK);
 
+        // confirm password field
+        JLabel confirmLabel= new JLabel("Confirm Password");
+        confirmLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        confirmLabel.setForeground(DARK);
+
         usernameField = new JTextField(80);
         passwordField = new JPasswordField(80);
+        confirmField = new JPasswordField(80);
+
+        //status label
+        statusLabel=new JLabel(" ");
+        statusLabel.setFont(new Font("Segoe UI",Font.PLAIN,11));
+        statusLabel.setForeground(ERR);
+        statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //login button
+        createAccountButton=new RoundedButton("Create Account");
+        createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //create action listener for createAccountButton
+        createAccountButton.addActionListener(event->
+        {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmField.getPassword());
+            // check empty fields FIRST, before hitting the database
+            if (username.isEmpty() || password.isEmpty())
+            {
+                statusLabel.setText("Please fill in both fields.");
+                statusLabel.revalidate();
+                statusLabel.repaint();
+            }
+            else if (!password.equals(confirmPassword))
+            {
+                statusLabel.setText("Passwords do not match.");
+                statusLabel.revalidate();
+                statusLabel.repaint();
+            }
+            else
+            {
+            }
+        });
+
 
         //assemble login parts
         accountCreationPanel.add(Box.createVerticalStrut(6));
@@ -73,6 +118,16 @@ public class AccountCreation {
         accountCreationPanel.add(leftAlign(passLabel));
         accountCreationPanel.add(Box.createVerticalStrut(6));
         accountCreationPanel.add(passwordField);
+        accountCreationPanel.add(Box.createVerticalStrut(18));
+        accountCreationPanel.add(leftAlign(confirmLabel));
+        accountCreationPanel.add(Box.createVerticalStrut(6));
+        accountCreationPanel.add(confirmField);
+        accountCreationPanel.add(Box.createVerticalStrut(12));
+        accountCreationPanel.add(createAccountButton);
+        accountCreationPanel.add(Box.createVerticalStrut(6));
+        accountCreationPanel.add(statusLabel);
+
+
 
         return accountCreationPanel;
     }
@@ -114,6 +169,63 @@ public class AccountCreation {
                     RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(background);
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 4, getHeight() - 4, radius, radius));
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    static class RoundedButton extends JButton
+    {
+        private boolean hover=false;
+        /**
+         * Constructs a rounded button with the given label.
+         *
+         * @param text the button text
+         */
+        public RoundedButton(String text)
+        {
+            /**
+             * Constructs a rounded button with the given label.
+             *
+             * @param text the button text
+             */
+            super(text);
+            setOpaque(false);
+            setContentAreaFilled(false);
+            setFocusPainted(false);
+            setFont(new Font("Segoe UI", Font.BOLD,14));
+            setForeground(WHITE);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            setPreferredSize(new Dimension(290,50));
+            //setMaximumSize(new Dimension(290,50));
+
+            addMouseListener(new MouseAdapter()
+            {
+                public void mouseEntered(MouseEvent e)
+                {
+                    hover=true;
+                    repaint();
+                }
+                public void mouseExited(MouseEvent e)
+                {
+                    hover=false;
+                    repaint();
+                }
+            });
+        }
+        /**
+         * Paints the button with a rounded shape and hover color effect.
+         *
+         * @param g the Graphics context
+         */
+        @Override
+        protected void paintComponent(Graphics g)
+        {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(hover ? MID : DARK);
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 10, 10));
             g2.dispose();
             super.paintComponent(g);
         }
