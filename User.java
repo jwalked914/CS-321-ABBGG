@@ -1,0 +1,106 @@
+
+import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+/**
+ *  Represents a user and its core attributes.
+ *  Each User object stores a username, password, isAdmin boolean, collection ArrayList
+ *  and a review ArrayList.
+ */
+public class User
+{
+    private String username;
+    private String password;
+    private final Boolean isAdmin;
+    private final ArrayList<UserCollection> collections;
+    //private final GameDatabase gameDB;
+    // private final ArrayList<review> reviews;
+
+    User(String username, String password, Boolean isAdmin, ArrayList<UserCollection> collections)//GameDatabase gameDB)
+    //ArrayList<review> reviews)
+    {
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
+        this.collections = collections;
+        // this.reviews = new ArrayList<>();
+        //this.gameDB = gameDB;
+    }
+
+    /**
+     * sets the username of the user when they are logging in for the first time
+     */
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    /**
+     * returns the user's username
+     *
+     * @return the username
+     */
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    /**
+     * returns the user's password
+     *
+     * @return the password
+     */
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    /**
+     * sets the password of the user when they are logging in for the first time
+     */
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
+    /**
+     * returns if the user is an admin
+     *
+     * @return isAdmin
+     */
+
+    public Boolean getIsAdmin()
+    {
+        return isAdmin;
+    }
+
+    /**
+     * returns Collection
+     *
+     * @return collection
+     */
+    public ArrayList<UserCollection> getCollections()
+    {
+        return collections;
+    }
+
+    /**
+     * Creates a collection
+     */
+    public void createCollection(String name)
+    {
+        collections.add(new UserCollection(name));
+    }
+    /**
+     * Overload create a collection method
+     */
+    public void createCollection(UserCollection collection)
+    {
+        collections.add(collection);
+    }
+}
