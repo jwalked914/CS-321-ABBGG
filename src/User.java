@@ -1,5 +1,3 @@
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -11,10 +9,10 @@ public class User
 {
     private String username;
     private String password;
-    private final Boolean isAdmin;
+    public Boolean isAdmin;
     private final ArrayList<UserCollection> collections;
-    private final GameDataBase gameDB;
-    // private final ArrayList<review> reviews;
+    // private final GameDatabase gameDB;
+    public ArrayList<Review> reviews;
 
     /**
      * Constructs a user object from various parameters
@@ -23,17 +21,16 @@ public class User
      * @param password the password
      * @param isAdmin if the user is an admin
      * @param collections an array that contains the user's collections
-     * @param review and array that contains the user's reviews
      */
 
-    User(String username, String password, Boolean isAdmin, ArrayList<UserCollection> collections)
-         //ArrayList<review> reviews)
+    User(String username, String password, Boolean isAdmin, ArrayList<UserCollection> collections,
+         ArrayList<Review> reviews)
     {
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
-        this.collections = collections;
-        // this.reviews = new ArrayList<>();
+        this.collections = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 
     /**
@@ -77,17 +74,6 @@ public class User
     }
 
     /**
-     * returns if the user is an admin
-     *
-     * @return isAdmin
-     */
-
-    public Boolean getIsAdmin()
-    {
-        return isAdmin;
-    }
-
-    /**
      * returns Collection
      *
      * @return collection
@@ -102,7 +88,15 @@ public class User
      */
     public void createCollection(String name)
     {
-        collections.add(new UserCollection(name, gameDB));
+        collections.add(new UserCollection(name));
+    }
+
+    /**
+     * add a collection
+     */
+    public void addCollection(UserCollection collection)
+    {
+        collections.add(collection);
     }
 
     /**
@@ -110,8 +104,23 @@ public class User
      */
     public void deleteCollection(String name)
     {
-        
+        collections.removeIf(collection -> collection.getName().equals(name));
     }
 
+    /**
+     * Creates a Review
+     */
+    public void createReview(int gameRef, String user, int rating, String reviewText)
+    {
+        reviews.add(new Review(gameRef, user, rating, reviewText));
+    }
+
+    /**
+     * Returns isAdmin
+     */
+    public boolean getIsAdmin()
+    {
+        return isAdmin;
+    }
 
 }
