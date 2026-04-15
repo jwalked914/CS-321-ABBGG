@@ -1,3 +1,10 @@
+/**
+ * Displays the account creation screen for the ABBG Board Games application.
+ * Handles user creation by adding credentials to the UserDatabase.
+ * On successful account creation, closes the account creation window and opens the main screen.
+ *
+ */
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,14 +14,28 @@ import java.awt.geom.RoundRectangle2D;
 
 public class AccountCreation {
 
+    /** The main container panel holding all account creation UI components */
     private JPanel accountCreationPanel;
-    private JTextField     usernameField;
+    /** Input field for the user's username */
+    private JTextField usernameField;
+    /** Input field for the user's password */
     private JPasswordField passwordField;
+    /** Second input for the user's password to see if they typed it in correctly */
     private JPasswordField confirmField;
-    private JLabel         statusLabel;
-    private JButton         createAccountButton;
+    /** Displays error or validation message for the user */
+    private JLabel statusLabel;
+    /** Button that submits the account creation form */
+    private JButton createAccountButton;
+    /** The user database used to place the user's newly made info */
     private final UserDatabase userDB;
 
+
+    /**
+     * Application entry point. Builds the backend database chain and
+     * launches the account creation screen on the Swing event dispatch thread.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args)
     {
         GameDatabase gameDB = new GameDatabase();
@@ -25,6 +46,11 @@ public class AccountCreation {
         });
     }
 
+    /**
+     * Constructs the account creation screen and displays it.
+     *
+     * @param userDB the user database used for authentication
+     */
     public AccountCreation(UserDatabase userDB)
     {
         this.userDB=userDB;
@@ -33,7 +59,11 @@ public class AccountCreation {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    /**
+     * Builds and configures the main application frame.
+     *
+     * @return the fully constructed JFrame for the account creation screen
+     */
     private JFrame buildFrame()
     {
         JFrame frame = new JFrame("Account Creation");
@@ -47,7 +77,12 @@ public class AccountCreation {
         background.add(buildCard(frame)); // white rounded card in center of screen
         return frame;
     }
-
+    /**
+     * Builds the central account creation card panel containing all UI components.
+     *
+     * @param frame the parent frame used for dialog interactions
+     * @return the constructed login panel
+     */
     private JPanel buildCard(JFrame frame)
     {
         accountCreationPanel=new RoundedPanel(20,GUIColors.LIGHT);
@@ -144,7 +179,12 @@ public class AccountCreation {
 
         return accountCreationPanel;
     }
-
+    /**
+     * Wraps a component in a left-aligned panel for consistent layout.
+     *
+     * @param c the component to align
+     * @return a JPanel containing the component aligned to the left
+     */
     private JPanel leftAlign(JComponent c)
     {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
