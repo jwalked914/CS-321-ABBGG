@@ -19,8 +19,10 @@ public abstract class BrowserPanel extends JPanel
     private javax.swing.Timer resizeTimer;
     private JPanel gridPanel;
     private JScrollPane scrollPane;
+    private JLabel titleLabel;
     public abstract void onSearch(String query);
     public abstract JPopupMenu buildFilterPanel();
+
 
     /**
      * Constructs the browser panel by initializing layout,
@@ -78,10 +80,10 @@ public abstract class BrowserPanel extends JPanel
         JPanel topRow = new JPanel(new BorderLayout());
         topRow.setBackground(GUIColors.DARK);
 
-        //build title
-        JLabel titleLabel = new JLabel(getTitle());
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titleLabel = new JLabel(getTitle());
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD,22));
         titleLabel.setForeground(GUIColors.LIGHT);
+
 
         //build search field
         JTextField searchField = new JTextField(getSearchHint());
@@ -137,7 +139,7 @@ public abstract class BrowserPanel extends JPanel
             }
         });
 
-        topRow.add(titleLabel, BorderLayout.WEST);
+        topRow.add(titleLabel, BorderLayout.NORTH);
         topRow.add(searchField, BorderLayout.EAST);
 
         //bottom row: filter by button on the left hand side
@@ -161,8 +163,11 @@ public abstract class BrowserPanel extends JPanel
             buildFilterPanel().show(filterButton, 0 , filterButton.getHeight());
         });
 
+        if(showFilterButton())
+        {
+            bottomRow.add(filterButton);
+        }
 
-        bottomRow.add(filterButton);
 
         headerPanel.add(topRow, BorderLayout.NORTH);
         headerPanel.add(bottomRow, BorderLayout.SOUTH);
@@ -216,6 +221,16 @@ public abstract class BrowserPanel extends JPanel
 
         this.add(scrollPane,BorderLayout.CENTER);
     }
+
+    protected String truncate(String text)
+    {
+        if(text.length() > 18)
+        {
+            return text.substring(0,18) + "...";
+        }
+        return text;
+    }
+
     /**
      * Returns the total number of cards for grid to display.
      *
@@ -233,6 +248,12 @@ public abstract class BrowserPanel extends JPanel
         revalidate();
         repaint();
     }
+
+    public void updateTitle(String title)
+    {
+        titleLabel.setText(title);
+    }
+
     /**
      * Returns the number of columns based on panel width.
      *
@@ -244,5 +265,11 @@ public abstract class BrowserPanel extends JPanel
         if (width == 0) return 4;
         return Math.max(1,width / 180);
     }
+
+    protected boolean showFilterButton()
+    {
+        return true;
+    }
+
 
 }

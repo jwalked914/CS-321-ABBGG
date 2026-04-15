@@ -19,6 +19,7 @@ public class GameBrowserPanel extends BrowserPanel
 {
     private GameCardListener cardListener;
     private final GameDatabase gameDB;
+    private final User user;
     private ArrayList<Game> filteredGames;
     private String currentQuery = "";
     private HashSet<String> selectedCategories = new HashSet<>();
@@ -27,12 +28,14 @@ public class GameBrowserPanel extends BrowserPanel
     /**
      * Constructs the game browser panel by invoking the parent layout algorithm.
      */
-    public GameBrowserPanel(GameDatabase gameDB)
+    public GameBrowserPanel(GameDatabase gameDB, User user)
     {
         super();
         this.gameDB = gameDB;
+        this.user = user;
         filteredGames = gameDB.getAllGames();
-        refresh();
+        updateTitle(getTitle());
+
 
 
         this.addMouseListener(new java.awt.event.MouseAdapter()
@@ -46,11 +49,17 @@ public class GameBrowserPanel extends BrowserPanel
     }
     /**
      * Returns the title for the games panel.
-     * @return "ABBGG Games"
+     *
+     * @return "ABBGG Games Database" for Master Database or collection name if User Collection
      */
     public String getTitle()
     {
-        return "ABBGG Games";
+        if(gameDB instanceof UserCollection)
+        {
+            return ((UserCollection) gameDB).getName();
+        }
+
+        return "ABBGG Game Database";
     }
     /**
      * Returns the placeholder text for the games search bar.
@@ -68,14 +77,12 @@ public class GameBrowserPanel extends BrowserPanel
     public JPanel buildCard(int index)
     {
         RoundedPanel card = new RoundedPanel(10, GUIColors.CREAM);
-        card.setLayout(new BorderLayout());
-        card.setPreferredSize(new Dimension(160, 160));
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setMaximumSize(new Dimension(175,210));
+        card.setMinimumSize(new Dimension(175,210));
+        card.setPreferredSize(new Dimension(175, 210));
 
         Game game = filteredGames.get(index);
-
-        JLabel nameLabel = new JLabel(game.getName(), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        nameLabel.setForeground(GUIColors.DARK);
 
         JLabel imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
         imageLabel.setForeground(GUIColors.DARK);
@@ -111,9 +118,6 @@ public class GameBrowserPanel extends BrowserPanel
             }
         }.execute();
 
-        card.add(imageLabel, BorderLayout.CENTER);
-        card.add(nameLabel, BorderLayout.SOUTH);
-
         card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         card.addMouseListener(new java.awt.event.MouseAdapter()
@@ -140,8 +144,31 @@ public class GameBrowserPanel extends BrowserPanel
                 card.repaint();
             }
         });
+        // add button
 
+        JLabel nameLabel = new JLabel(game.getName(), SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        nameLabel.setPreferredSize(new Dimension(25,25));
+        nameLabel.setText(truncate(game.getName()));
+        nameLabel.setForeground(GUIColors.DARK);
 
+        RoundedButton actionButton = new RoundedButton(
+                gameDB instanceof UserCollection ? "Remove" : "Add", 130, 25);
+
+        actionButton.addActionListener(e ->
+                new CollectionDialog(this, game, user, !(gameDB instanceof UserCollection)).setVisible(true));
+
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        actionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        card.add(Box.createVerticalStrut(5));
+        card.add(imageLabel);
+        card.add(Box.createVerticalStrut(5));
+        card.add(nameLabel);
+        card.add(Box.createVerticalStrut(5));
+        card.add(actionButton);
+        card.add(Box.createVerticalStrut(5));
 
         return card;
     }

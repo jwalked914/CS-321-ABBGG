@@ -1,4 +1,6 @@
 import org.w3c.dom.*;
+
+import javax.naming.directory.ModificationItem;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -15,15 +17,17 @@ import java.util.ArrayList;
 public class FileScannerXML
 {
     private final File xmlFile;
+    private GameDatabase gameDatabase;
 
     /**
      * Constructs a FileScannerXML with the given XML file.
      *
      * @param xmlFile the XML file to parse
      */
-    public FileScannerXML(File xmlFile)
+    public FileScannerXML(File xmlFile, GameDatabase gameDatabase)
     {
         this.xmlFile = xmlFile;
+        this.gameDatabase=gameDatabase;
     }
 
     /**
@@ -38,7 +42,6 @@ public class FileScannerXML
         ArrayList<Game> games = new ArrayList<>();
         try
         {
-
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(xmlFile);
@@ -66,6 +69,35 @@ public class FileScannerXML
         return games;
     }
 
+    public ArrayList<User> parseUsersFromXML()
+    {
+        ArrayList<User> users=new ArrayList<>();
+        try
+        {
+            DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document userDoc=builder.parse(xmlFile);
+            userDoc.getDocumentElement().normalize();
+
+            NodeList userList=userDoc.getElementsByTagName("user");
+            for (int i=0; i<userList.getLength();i++)
+            {
+                Node node=userList.item(i);
+                if(node.getNodeType()!=Node.ELEMENT_NODE)
+                {
+                    continue;
+                }
+                Element user = (Element) node;
+                users.add(parseUserElement(user));
+            }
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Failed to parse XML");
+        }
+        return users;
+    }
+
     /**
      *  Parses a single XML element representing a game and constructs {link @Game}
      *  object.
@@ -75,16 +107,15 @@ public class FileScannerXML
      */
     private Game parseGameElement(Element gameElement)
     {
-
         String id = gameElement.getAttribute("id");
         String name = getAttributeValue(gameElement, "name", "N/A");
         String thumbnailURL = getTextContent(gameElement, "thumbnail", "N/A");
         String imageURL = getTextContent(gameElement, "image", "N/A");
         String desc = getTextContent(gameElement, "description", "Unknown");
         String pubYear = getAttributeValue(gameElement, "yearpublished", "N/A");
-        String minPlayers = getAttributeValue(gameElement, "minplayers", "1");
-        String maxPlayers = getAttributeValue(gameElement, "maxplayers", "1");
-        String playingTime = getAttributeValue(gameElement, "playingtime", "1");
+        String minPlayers = getAttributeValue(gameElement, "minplayers", "N/A");
+        String maxPlayers = getAttributeValue(gameElement, "maxplayers", "N/A");
+        String playingTime = getAttributeValue(gameElement, "playingTime", "N/A");
         ArrayList<String> categories = getTagList(gameElement,"link", "boardgamecategory");
         ArrayList<String> mechanics = getTagList(gameElement,"link", "boardgamemechanic");
 
@@ -92,7 +123,52 @@ public class FileScannerXML
     }
 
     /**
-     * Returns the "value" of a child node by tag name.
+     *  Parses a single XML element representing a user and constructs {@link User}
+     *  object.
+     *
+     * @param userElement an XML parent node
+     * @return a {@link User} object with attributes populated by the XML
+     */
+    private User parseUserElement(Element userElement)
+    {
+        String username=userElement.getAttribute("username");
+        String password=userElement.getAttribute("password");
+        String adminCheck=userElement.getAttribute("isAdmin");
+        boolean isAdmin=Boolean.parseBoolean(adminCheck);
+        NodeList collectionList=userElement.getElementsByTagName("collection");
+        ArrayList<UserCollection> collections=new ArrayList<>();
+        for (int i=0; i<collectionList.getLength();i++)
+        {
+            Node collectionNode=collectionList.item(i);
+
+            if (collectionNode.getNodeType() == Node.ELEMENT_NODE)
+            {
+                Element collectionElement=(Element) collectionNode;
+                String collectionName=collectionElement.getAttribute("name");
+                UserCollection collection=new UserCollection(collectionName);
+                NodeList gameIdList=collectionElement.getElementsByTagName("gameId");
+                for (int j=0; j<gameIdList.getLength();j++)
+                {
+                    Node gameNode=gameIdList.item(j);
+                    if (gameNode.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        Element gameElement= (Element) gameNode;
+                        int gameId=Integer.parseInt(gameElement.getAttribute("value"));
+                        Game game=gameDatabase.getGameById(gameId);
+                        if (game!=null)
+                        {
+                            collection.addGame(game);
+                        }
+                    }
+                }
+                collections.add(collection);
+            }
+        }
+        return new User(username,password, isAdmin,collections);
+    }
+
+    /**
+     * Gets the "value" of a child node by tag name.
      *
      * @param parent the parent XML node
      * @param tag the child element's tag name
@@ -113,7 +189,7 @@ public class FileScannerXML
     }
 
     /**
-     * Returns the text content of a child node by tag name.
+     * Gets the text content of a child node by tag name.
      *
      * @param parent the parent XML node
      * @param tag the child element's text content
@@ -134,7 +210,7 @@ public class FileScannerXML
     }
 
     /**
-     * Returns a tag list of a child node by tag and type.
+     * Gets a tag list of a child node by tag and type.
      *
      * @param parent the parent XML node
      * @param tag a link of child node
@@ -164,4 +240,47 @@ public class FileScannerXML
         return stringList;
     }
 
+    public ArrayList<Review> getReviewForGame(String reviewsXMLPath, Game game)
+    {
+        ArrayList<Review> reviewList=new ArrayList<>();
+        File reviewFile= new File(reviewsXMLPath);
+        if (!reviewFile.exists())
+        {
+            return reviewList;
+        }
+        try {
+            DocumentBuilderFactory reviewFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder reviewBuilder = reviewFactory.newDocumentBuilder();
+            Document reviewDoc = reviewBuilder.parse(reviewsXMLPath);
+
+            NodeList gameReviews = reviewDoc.getElementsByTagName("gameReview");
+
+            for (int i=0; i<gameReviews.getLength();i++)
+            {
+                Element gameReview=(Element) gameReviews.item(i);
+                int id=Integer.parseInt(gameReview.getAttribute("gameId"));
+                int gameId=game.getID();
+                if(id==gameId)
+                {
+                    NodeList userReviews=gameReview.getElementsByTagName("userReview");
+                    for (int j=0;j<userReviews.getLength();j++)
+                    {
+                        Element userReview=(Element) userReviews.item(j);
+                        String username=userReview.getAttribute("username");
+                        int rating = Integer.parseInt(userReview.getAttribute("rating"));
+                        String text=userReview.getAttribute("text");
+                        reviewList.add((new Review(gameId, username, rating, text)));
+                    }
+                    break; //found desired game
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("apple");
+        }
+        return reviewList;
+    }
+
 }
+
