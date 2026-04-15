@@ -29,8 +29,8 @@ public class User
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
-        this.collections = new ArrayList<>();
-        this.reviews = new ArrayList<>();
+        this.collections = collections;
+        this.reviews = reviews;
     }
 
     /**
@@ -121,6 +121,16 @@ public class User
     public boolean getIsAdmin()
     {
         return isAdmin;
+    }
+
+    /**
+    * set admin privileges of user
+    *
+    * @param isAdmin if the user is an admin
+    */
+    public void setIsAdmin(boolean isAdmin)
+    {
+        this.isAdmin=isAdmin;
     }
 
 }
