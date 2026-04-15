@@ -90,7 +90,7 @@ public class AccountCreation {
         accountCreationPanel.setBorder(new EmptyBorder(100,150,100,150));
         accountCreationPanel.setPreferredSize(new Dimension(1500,900));
 
-        //welcome screem for creating account
+        //welcome screen for creating account
         JLabel welcomeCreationTag = new JLabel("Account Creation");
         welcomeCreationTag.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomeCreationTag.setFont(new Font("Segoe UI", Font.BOLD,30));
