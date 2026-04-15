@@ -87,7 +87,7 @@ public class AccountCreation {
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //login button
-        createAccountButton=new RoundedButton("Create Account");
+        createAccountButton=new RoundedButton("Create Account",100,100);
         createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         //create action listener for createAccountButton
         createAccountButton.addActionListener(event->
@@ -154,94 +154,7 @@ public class AccountCreation {
         return p;
     }
 
-    static class RoundedPanel extends JPanel
-    {
-        private final int radius;
-        private final Color background;
-        /**
-         * Constructs a rounded panel.
-         *
-         * @param radius the corner radius
-         * @param background the background color
-         */
-        public RoundedPanel(int radius, Color background) {
-            this.radius = radius;
-            this.background = background;
-            setOpaque(false);
-        }
-        /**
-         * Paints the rounded background of the panel.
-         *
-         * @param g the Graphics context
-         */
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(background);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 4, getHeight() - 4, radius, radius));
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
 
-    static class RoundedButton extends JButton
-    {
-        private boolean hover=false;
-        /**
-         * Constructs a rounded button with the given label.
-         *
-         * @param text the button text
-         */
-        public RoundedButton(String text)
-        {
-            /**
-             * Constructs a rounded button with the given label.
-             *
-             * @param text the button text
-             */
-            super(text);
-            setOpaque(false);
-            setContentAreaFilled(false);
-            setFocusPainted(false);
-            setFont(new Font("Segoe UI", Font.BOLD,14));
-            setForeground(GUIColors.WHITE);
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            setPreferredSize(new Dimension(290,50));
-            //setMaximumSize(new Dimension(290,50));
 
-            addMouseListener(new MouseAdapter()
-            {
-                public void mouseEntered(MouseEvent e)
-                {
-                    hover=true;
-                    repaint();
-                }
-                public void mouseExited(MouseEvent e)
-                {
-                    hover=false;
-                    repaint();
-                }
-            });
-        }
-        /**
-         * Paints the button with a rounded shape and hover color effect.
-         *
-         * @param g the Graphics context
-         */
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(hover ? GUIColors.MID : GUIColors.DARK);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 10, 10));
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
 
 }
