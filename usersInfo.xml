@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<users>
+    <user isAdmin="false" password="pie" username="banana">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="apple" username="bread">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="apple" username="pineapple">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="1234" username="trey">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="apple" username="nummy">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="pass123" username="testUser">
+        <collections>
+            <collection name="Gaga">
+                <gameId value="374173"/>
+            </collection>
+        </collections>
+        <reviews/>
+    </user>
+    <user isAdmin="false" password="apple" username="banana1234">
+        <collections/>
+        <reviews/>
+    </user>
+</users>
