@@ -13,16 +13,21 @@ public class AccountCreation {
     private JPasswordField confirmField;
     private JLabel         statusLabel;
     private JButton         createAccountButton;
-    // private UserDatabase userDB;
+    private final UserDatabase userDB;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+        GameDatabase gameDB = new GameDatabase();
+        UserDatabase userDB = new UserDatabase(gameDB);
+
         SwingUtilities.invokeLater(() -> {
-            new AccountCreation();
+            new AccountCreation(userDB);
         });
     }
 
-    public AccountCreation()
+    public AccountCreation(UserDatabase userDB)
     {
+        this.userDB=userDB;
         JFrame frame = buildFrame();
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -47,8 +52,14 @@ public class AccountCreation {
     {
         accountCreationPanel=new RoundedPanel(20,GUIColors.LIGHT);
         accountCreationPanel.setLayout(new BoxLayout(accountCreationPanel, BoxLayout.Y_AXIS));
-        accountCreationPanel.setBorder(new EmptyBorder(60,150,60,150));
+        accountCreationPanel.setBorder(new EmptyBorder(100,150,100,150));
         accountCreationPanel.setPreferredSize(new Dimension(1500,900));
+
+        //welcome screem for creating account
+        JLabel welcomeCreationTag = new JLabel("Account Creation");
+        welcomeCreationTag.setAlignmentX(Component.CENTER_ALIGNMENT);
+        welcomeCreationTag.setFont(new Font("Segoe UI", Font.BOLD,30));
+        welcomeCreationTag.setForeground(GUIColors.DARK);
 
         //username field
         JLabel userLabel= new JLabel("Username");
@@ -97,13 +108,23 @@ public class AccountCreation {
                 statusLabel.revalidate();
                 statusLabel.repaint();
             }
-            else
+            else if (userDB.isUsernameTaken(username))
             {
+                statusLabel.setText("Username is taken.");
+                statusLabel.revalidate();
+                statusLabel.repaint();
+            }
+            else{
+                //users are initalized to non-admins
+                //userDatabase handles creating users internally
+                userDB.addUser(username,password,false);
+                frame.dispose();
+                new LoginScreen(userDB);
             }
         });
 
-
         //assemble login parts
+        accountCreationPanel.add(welcomeCreationTag);
         accountCreationPanel.add(Box.createVerticalStrut(6));
         accountCreationPanel.add(leftAlign(userLabel));
         accountCreationPanel.add(Box.createVerticalStrut(10));
@@ -120,8 +141,6 @@ public class AccountCreation {
         accountCreationPanel.add(createAccountButton);
         accountCreationPanel.add(Box.createVerticalStrut(6));
         accountCreationPanel.add(statusLabel);
-
-
 
         return accountCreationPanel;
     }
