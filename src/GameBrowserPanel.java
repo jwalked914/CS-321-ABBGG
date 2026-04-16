@@ -6,13 +6,11 @@
  * Design Pattern: Template Method — implements the primitive operations
  * defined in BrowserPanel to display game cards instead of collections.
  */
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.*;
 
 public class GameBrowserPanel extends BrowserPanel
@@ -20,6 +18,7 @@ public class GameBrowserPanel extends BrowserPanel
     private GameCardListener cardListener;
     private final GameDatabase gameDB;
     private final User user;
+    private ArrayList<GameCard> gameCards = new ArrayList<>();
     private ArrayList<Game> filteredGames;
     private String currentQuery = "";
     private HashSet<String> selectedCategories = new HashSet<>();
@@ -34,9 +33,10 @@ public class GameBrowserPanel extends BrowserPanel
         this.gameDB = gameDB;
         this.user = user;
         filteredGames = gameDB.getAllGames();
+        buildGameCards();
         updateTitle(getTitle());
-
-
+        updateFilterButton();
+        refresh();
 
         this.addMouseListener(new java.awt.event.MouseAdapter()
         {
@@ -76,101 +76,13 @@ public class GameBrowserPanel extends BrowserPanel
      */
     public JPanel buildCard(int index)
     {
-        RoundedPanel card = new RoundedPanel(10, GUIColors.CREAM);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setMaximumSize(new Dimension(175,210));
-        card.setMinimumSize(new Dimension(175,210));
-        card.setPreferredSize(new Dimension(175, 210));
-
         Game game = filteredGames.get(index);
-
-        JLabel imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
-        imageLabel.setForeground(GUIColors.DARK);
-        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-
-        new SwingWorker<ImageIcon, Void>()
+        for (GameCard card : gameCards)
         {
-            protected ImageIcon doInBackground() throws Exception {
-                URL url = new URL(game.getThumbnailURL());
-                BufferedImage img = ImageIO.read(url);
-
-                BufferedImage scaled = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = scaled.createGraphics();
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.drawImage(img, 0, 0 ,130, 130, null);
-                g2d.dispose();
-
-                return new ImageIcon(scaled);
-            }
-
-            protected void done() {
-                try
-                {
-                    imageLabel.setText("");
-                    imageLabel.setIcon(get());
-                }
-                catch (Exception e)
-                {
-                    imageLabel.setText("No Image");
-                }
-            }
-        }.execute();
-
-        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        card.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e)
-            {
-                if(cardListener != null)
-                    cardListener.onGameSelected(game);
-                    // GAME DESC LOGIC GOES HERE
-            }
-
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e)
-            {
-                card.setBackground(GUIColors.LIGHT);
-                card.repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e)
-            {
-                card.setBackground(GUIColors.CREAM);
-                card.repaint();
-            }
-        });
-        // add button
-
-        JLabel nameLabel = new JLabel(game.getName(), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        nameLabel.setPreferredSize(new Dimension(25,25));
-        nameLabel.setText(truncate(game.getName()));
-        nameLabel.setForeground(GUIColors.DARK);
-
-        RoundedButton actionButton = new RoundedButton(
-                gameDB instanceof UserCollection ? "Remove" : "Add", 130, 25);
-
-        actionButton.addActionListener(e ->
-                new CollectionDialog(this, game, user, !(gameDB instanceof UserCollection)).setVisible(true));
-
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        actionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        card.add(Box.createVerticalStrut(5));
-        card.add(imageLabel);
-        card.add(Box.createVerticalStrut(5));
-        card.add(nameLabel);
-        card.add(Box.createVerticalStrut(5));
-        card.add(actionButton);
-        card.add(Box.createVerticalStrut(5));
-
-        return card;
+            if (card.getGame() == game)
+                return card;
+        }
+        return null;
     }
     /**
      *  Builds and returns filter dropdown with the categories and mechanics
@@ -334,7 +246,6 @@ public class GameBrowserPanel extends BrowserPanel
         filteredGames = result;
         refresh();
     }
-
     public interface GameCardListener
     {
         void onGameSelected(Game game);
@@ -367,6 +278,31 @@ public class GameBrowserPanel extends BrowserPanel
     public int getCardCount()
     {
         return filteredGames.size() ;
+    }
+
+    /**
+     * Builds and caches all GameCard instances from the current filtered games list.
+     * Each card is initialized with its remove and click callbacks.
+     */
+    private void buildGameCards()
+    {
+        gameCards.clear();
+        for (int i = 0; i < filteredGames.size(); i++)
+        {
+            Game game = filteredGames.get(i);
+            gameCards.add(new GameCard(
+                    game,
+                    gameDB instanceof UserCollection,
+                    user,
+                    gameDB,
+                    () -> {
+                        filteredGames.remove(game);
+                        gameCards.removeIf(c -> c.getGame() == game);
+                        refresh();
+                    },
+                    () -> { if (cardListener != null) cardListener.onGameSelected(game); }
+            ));
+        }
     }
 
 }

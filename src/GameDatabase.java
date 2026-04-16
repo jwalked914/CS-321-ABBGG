@@ -19,7 +19,7 @@ public class GameDatabase
 
     /**
      * Constructs a master game database of Game objects.
-     * @param gameDB parsed boardgame array list
+     * @param gameDB parsed board game array list
      */
     protected GameDatabase(ArrayList<Game> gameDB)
     {
@@ -42,15 +42,6 @@ public class GameDatabase
         this.categoryMap = new HashMap<>();
         this.mechanicMap = new HashMap<>();
 
-    }
-
-
-    public void printAllGames()
-    {
-        for(Game g : games)
-        {
-            System.out.println(g);
-        }
     }
 
 
@@ -339,7 +330,7 @@ public class GameDatabase
             String[] words = g.getName().toLowerCase().split("\\s+");
             for(String word: words)
             {
-                wordMap.computeIfAbsent(word, k-> new HashSet()).add(g);
+                wordMap.computeIfAbsent(word, k-> new HashSet<>()).add(g);
             }
         }
     }

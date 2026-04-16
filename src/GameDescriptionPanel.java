@@ -16,39 +16,27 @@ import java.util.ArrayList;
 public class GameDescriptionPanel extends JPanel
 {
     /** Displays the game's cover image. */
-    private JLabel imageLabel;
-    /** Panel holding all game info labels on the right side. */
-    private JPanel infoPanel;
+    private final JLabel imageLabel;
     /** Displays the game name. */
-    private JLabel nameLabel;
+    private final JLabel nameLabel;
     /** Displays the player count range. */
-    private JLabel playerLabel;
+    private final JLabel playerLabel;
     /** Displays the year the game was published. */
-    private JLabel yearLabel;
+    private final JLabel yearLabel;
     /** Displays the game description. */
-    private JTextArea description;
+    private final JTextArea description;
     /** Displays the game's categories. */
-    private JLabel categoriesLabel;
+    private final JLabel categoriesLabel;
     /** Displays the game's mechanics. */
-    private JLabel mechanicsLabel;
+    private final JLabel mechanicsLabel;
     /** Displays the list of reviews for the current game. */
     private final JList<Review> reviewList;
-    /** Button to switch to the review form card. */
-    private RoundedButton addReviewButton;
-    /** Button to cancel and return to the reviews list card. */
-    private RoundedButton cancelReviewButton;
-    /** Button to submit the review form and save to XML. */
-    private RoundedButton saveReviewButton;
-    /** Button to open the add-to-collection dialog. */
-    private RoundedButton addGameButton;
     /** Stores the 5 rating radio buttons so they can be looped over on save. */
-    private JRadioButton [] ratingButtons;
+    private final JRadioButton [] ratingButtons;
 /** The game currently being displayed. Updated via setDisplayedGame. */
     private Game currentGame;
-    /** File path to the reviews XML file. */
-    private String reviewsXMLPath;
     /** Placeholder for GameDatabase ( used for file scanner)*/
-    private GameDatabase holderGameDB=null;
+    private final GameDatabase holderGameDB=null;
     /** The logged-in user interacting with this panel. */
     private final User currentUser;
 
@@ -62,7 +50,6 @@ public class GameDescriptionPanel extends JPanel
      */
     public GameDescriptionPanel(User currentUser, String reviewsXMLPath)
     {
-        this.reviewsXMLPath = reviewsXMLPath;
         this.currentUser = currentUser;
         this.ratingButtons= new JRadioButton[5];
 
@@ -166,21 +153,21 @@ public class GameDescriptionPanel extends JPanel
         reviewScroll.setBorder(null);
 
         //BUTTONS
-        addReviewButton = new RoundedButton("Add Review", 50, 45);
+        RoundedButton addReviewButton = new RoundedButton("Add Review", 50, 45);
         addReviewButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         //set action listener for add review
         addReviewButton.addActionListener(e->{
             bottomLayout.show(bottomPanel, "form");
         });
 
-        cancelReviewButton = new RoundedButton("Cancel",35,20);
+        RoundedButton cancelReviewButton = new RoundedButton("Cancel", 35, 20);
         cancelReviewButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         //set action listener to return from review panel
         cancelReviewButton.addActionListener(e->{
             bottomLayout.show(bottomPanel,"Reviews");
         });
 
-        saveReviewButton = new RoundedButton("Save", 35,20);
+        RoundedButton saveReviewButton = new RoundedButton("Save", 35, 20);
         saveReviewButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         //set action listener to return from review panel
         saveReviewButton.addActionListener(e->{
@@ -212,7 +199,7 @@ public class GameDescriptionPanel extends JPanel
 
         //GAME INFO PANEL
         //set right hand side of screen (game info)
-        infoPanel = new JPanel();
+        JPanel infoPanel = new JPanel();
         infoPanel.setBackground(GUIColors.DARK);
         infoPanel.setLayout(new BoxLayout(infoPanel,BoxLayout.Y_AXIS));
         infoPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -267,7 +254,7 @@ public class GameDescriptionPanel extends JPanel
         mechanicsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         //button to add game to collection+ dialog
-        addGameButton = new RoundedButton("Add Game", 200, 45);
+        RoundedButton addGameButton = new RoundedButton("Add Game", 200, 45);
         addGameButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         addGameButton.addActionListener(e ->
                 new CollectionDialog(this, currentGame, currentUser, true).setVisible(true));

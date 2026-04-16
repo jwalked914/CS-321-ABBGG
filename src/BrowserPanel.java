@@ -11,18 +11,16 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public abstract class BrowserPanel extends JPanel
 {
 
     private javax.swing.Timer resizeTimer;
-    private JPanel gridPanel;
-    private JScrollPane scrollPane;
+    protected JPanel gridPanel;
+    protected JScrollPane scrollPane;
     private JLabel titleLabel;
-    public abstract void onSearch(String query);
+    private JButton filterButton;
     public abstract JPopupMenu buildFilterPanel();
-
 
     /**
      * Constructs the browser panel by initializing layout,
@@ -51,11 +49,6 @@ public abstract class BrowserPanel extends JPanel
         });
 
     }
-    /**
-     * Returns the title displayed in the panel header.
-     * @return the panel title string
-     */
-    public abstract String getTitle();
     /**
      * Returns the placeholder text displayed in the search field.
      * @return the search hint string
@@ -147,7 +140,7 @@ public abstract class BrowserPanel extends JPanel
         bottomRow.setBackground(GUIColors.DARK);
 
         //build filter button
-        JButton filterButton = new JButton("Filter");
+        filterButton = new JButton("Filter");
         filterButton.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         filterButton.setBackground(GUIColors.CREAM);
         filterButton.setForeground(GUIColors.DARK);
@@ -163,24 +156,12 @@ public abstract class BrowserPanel extends JPanel
             buildFilterPanel().show(filterButton, 0 , filterButton.getHeight());
         });
 
-        if(showFilterButton())
-        {
-            bottomRow.add(filterButton);
-        }
-
+        bottomRow.add(filterButton,BorderLayout.SOUTH);
 
         headerPanel.add(topRow, BorderLayout.NORTH);
         headerPanel.add(bottomRow, BorderLayout.SOUTH);
 
         this.add(headerPanel, BorderLayout.NORTH);
-
-        headerPanel.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                headerPanel.requestFocusInWindow();
-            }
-        });
     }
     /**
      * Builds the scrollable grid of cards and adds it to the center of the panel.
@@ -191,9 +172,8 @@ public abstract class BrowserPanel extends JPanel
         gridPanel.setBackground(GUIColors.MID);
         gridPanel.setBorder(new EmptyBorder(10,10,10,10));
 
-        int totalGames = getCardCount();
 
-        for (int i=0; i < totalGames; i++)
+        for (int i = 0; i < getCardCount(); i++)
         {
             gridPanel.add(buildCard(i));
         }
@@ -221,23 +201,18 @@ public abstract class BrowserPanel extends JPanel
 
         this.add(scrollPane,BorderLayout.CENTER);
     }
-
-    protected String truncate(String text)
-    {
-        if(text.length() > 18)
-        {
-            return text.substring(0,18) + "...";
-        }
-        return text;
-    }
-
+    /**
+     * Handles search inputs and updates cards accordingly.
+     *
+     * @param query current search string, null if cleared
+     */
+    public abstract void onSearch(String query);
     /**
      * Returns the total number of cards for grid to display.
      *
      * @return total card count
      */
     public abstract int getCardCount();
-
     /**
      * Refreshes grid whenever screen is resized and updates data to reflect changes.
      */
@@ -248,12 +223,39 @@ public abstract class BrowserPanel extends JPanel
         revalidate();
         repaint();
     }
-
+    /**
+     * Returns the title displayed in the panel header.
+     * @return the panel title string
+     */
+    public abstract String getTitle();
+    /**
+     * Updates the title label in the header to passed string.
+     *
+     * @param title the new title string to display
+     */
     public void updateTitle(String title)
     {
         titleLabel.setText(title);
     }
-
+    /**
+     * Determines whether filter button should be visible.
+     * Override in classes that don't support filtering
+     *
+     * @return true if the filler button should be shown
+     */
+    protected boolean showFilterButton()
+    {
+        return true;
+    }
+    /**
+     * Shows or hides the filter button based on the subclass.
+     *
+     */
+    public void updateFilterButton()
+    {
+        if (filterButton != null)
+            filterButton.setVisible(showFilterButton());
+    }
     /**
      * Returns the number of columns based on panel width.
      *
@@ -265,11 +267,19 @@ public abstract class BrowserPanel extends JPanel
         if (width == 0) return 4;
         return Math.max(1,width / 180);
     }
-
-    protected boolean showFilterButton()
+    /**
+     * Shrinks strings size if it passes a certain threshold.
+     *
+     * @param text to test length
+     * @return threshold meeting string
+     */
+    protected String truncate(String text)
     {
-        return true;
+        if(text.length() > 18)
+        {
+            return text.substring(0,18) + "...";
+        }
+        return text;
     }
-
 
 }
