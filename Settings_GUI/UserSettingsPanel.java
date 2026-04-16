@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class UserSettingsPanel extends JPanel
 {
-    public UserSettingsPanel(String username) {
+    public UserSettingsPanel(User user) {
         this.setLayout(new BorderLayout());
         this.setBackground(GUIColors.MID);
 
@@ -24,7 +24,7 @@ public class UserSettingsPanel extends JPanel
         userCard.setLayout(new BorderLayout());
         userCard.setBorder(new EmptyBorder(8, 10, 8, 10));
 
-        JLabel userLabel = new JLabel("Logged in as: " + username);
+        JLabel userLabel = new JLabel("Logged in as: " + user.getUsername());
         userLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
         userLabel.setForeground(GUIColors.DARK);
         userCard.add(userLabel, BorderLayout.WEST);
