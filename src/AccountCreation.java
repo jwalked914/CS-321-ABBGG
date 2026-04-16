@@ -81,7 +81,7 @@ public class AccountCreation {
      * Builds the central account creation card panel containing all UI components.
      *
      * @param frame the parent frame used for dialog interactions
-     * @return the constructed login panel
+     * @return the constructed account creation panel
      */
     private JPanel buildCard(JFrame frame)
     {

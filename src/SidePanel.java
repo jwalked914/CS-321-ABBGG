@@ -6,18 +6,28 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class SidePanel {
-
+    /** The main container panel holding all SidePanel UI components */
     private JPanel createdSidePanel;
+    /** Button to send the user to their library */
     private JButton libraryButton;
+    /** Button to send the user to the settings menu */
     private JButton settingsButton;
+    /** Button to send the user to logout */
     private JButton logoutButton;
 
+    /**
+     * Application entry point. Builds the backend database chain and
+     * launches the Side Panel screen on the Swing event dispatch thread.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new SidePanel();
         });
     }
 
+    /** Constructs the SidePanel screen and displays it. */
     public SidePanel()
     {
         JFrame frame = buildFrame();
@@ -26,6 +36,11 @@ public class SidePanel {
         frame.setVisible(true);
     }
 
+    /**
+     * Builds and configures the main application frame.
+     *
+     * @return the fully constructed JFrame for the SidePanel screen
+     */
     private JFrame buildFrame()
     {
         JFrame frame = new JFrame();
@@ -40,6 +55,12 @@ public class SidePanel {
         return frame;
     }
 
+    /**
+     * Builds the central side panel containing all UI components.
+     *
+     * @param frame the parent frame used for dialog interactions
+     * @return the constructed side panel
+     */
     private JPanel buildCard(JFrame frame) {
         createdSidePanel=new RoundedPanel(20,GUIColors.LIGHT);
         createdSidePanel.setLayout(new BoxLayout(createdSidePanel, BoxLayout.Y_AXIS));
@@ -85,13 +106,5 @@ public class SidePanel {
         return createdSidePanel;
     }
 
-    private JPanel leftAlign(JComponent c)
-    {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        p.setOpaque(false);
-        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, c.getPreferredSize().height + 2));
-        p.add(c);
-        return p;
-    }
 
 }
