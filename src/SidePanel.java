@@ -8,6 +8,9 @@ import java.awt.geom.RoundRectangle2D;
 public class SidePanel {
 
     private JPanel createdSidePanel;
+    private JButton libraryButton;
+    private JButton settingsButton;
+    private JButton logoutButton;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -40,16 +43,44 @@ public class SidePanel {
     private JPanel buildCard(JFrame frame) {
         createdSidePanel=new RoundedPanel(20,GUIColors.LIGHT);
         createdSidePanel.setLayout(new BoxLayout(createdSidePanel, BoxLayout.Y_AXIS));
-        createdSidePanel.setBorder(new EmptyBorder(60,150,60,150));
-        createdSidePanel.setPreferredSize(new Dimension(300,900));
+        createdSidePanel.setBorder(new EmptyBorder(10,20,10,20));
+        createdSidePanel.setPreferredSize(new Dimension(200,900));
 
         //username field
         JLabel userLabel= new JLabel("Username");
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        userLabel.setFont(new Font("Segoe UI",Font.BOLD,25));
         userLabel.setForeground(GUIColors.DARK);
+        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //library button
+        libraryButton=new RoundedButton("Library",40,40);
+        libraryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // create action listener for libraryButton
+        libraryButton.addActionListener(event->{});
+
+        //settings button
+        settingsButton=new RoundedButton("Settings",20,10);
+        settingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // action listener for the settingsButton
+        settingsButton.addActionListener(event->{});
+
+        //logout button
+        logoutButton=new RoundedButton("Logout",20,10);
+        logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // action listener for the logoutButton
+        logoutButton.addActionListener(event->{});
+
+
 
         createdSidePanel.add(Box.createVerticalStrut(6));
-        createdSidePanel.add(leftAlign(userLabel));
+        createdSidePanel.add(userLabel);
+        createdSidePanel.add(Box.createVerticalStrut(6));
+        createdSidePanel.add(libraryButton);
+        createdSidePanel.add(Box.createVerticalStrut(700));
+        createdSidePanel.add(settingsButton);
+        createdSidePanel.add(Box.createVerticalStrut(6));
+        createdSidePanel.add(logoutButton);
+
 
         return createdSidePanel;
     }
