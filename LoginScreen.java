@@ -7,69 +7,36 @@
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
-import java.io.File;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 public class LoginScreen
 {
-    static final Color DARK  = new Color(0x72, 0x7D, 0x73);
-    static final Color MID   = new Color(0xAA, 0xB9, 0x9A);
-    static final Color LIGHT = new Color(0xD0, 0xDD, 0xD0);
-    static final Color CREAM = new Color(0xF0, 0xF0, 0xD7);
-    static final Color WHITE = new Color(0xFF, 0xFF, 0xFF);
-    static final Color ERR   = new Color(0xB0, 0x4A, 0x4A);
-
-    /** Displays the application title. */
-    private JLabel         welcomeTag;
     /** Displays error or validation messages to the user. */
     private JLabel         statusLabel;
     /** Input field for the user's username. */
     private JTextField     usernameField;
     /** Input field for the user's password, masking characters as typed. */
     private JPasswordField passwordField;
-    /** Input field for the user's password, masking characters as typed. */
-    private JButton        loginButton;
-    /** Button that submits the login form. */
-    //private JButton        exitButton;
-    /** The main container panel holding all login UI components. */
-    private JPanel         loginPanel;
     /** The user database used to validate login credentials. */
-    private UserDatabase userDB;
+    private final UserDatabase userDatabase;
+    /** Game Library to load in for the main screen */
+    private final GameDatabase gameLibrary;
+    /** Reviews to load in for the main screen */
+    private final String reviewsXMLPath;
 
-    /**
-     * Application entry point. Builds the backend database chain and
-     * launches the login screen on the Swing event dispatch thread.
-     *
-     * @param args command-line arguments (not used)
-     */
-    public static void main(String[] args)
-    {
-        SwingUtilities.invokeLater(() -> {
-            // build the backend
-            File gamesFile = new File("bgg90Games.xml");
-            FileScannerXML gameScanner = new FileScannerXML(gamesFile, null);
-            ArrayList<Game> gameList   = gameScanner.parseGamesFromXML();
-            GameDatabase gameDB        = new GameDatabase(gameList);
-            UserDatabase userDB        = new UserDatabase(gameDB);
-
-            // hand it to the screen
-            new LoginScreen(userDB);
-        });
-    }
     /**
      * Constructs the login screen and displays it.
      *
-     * @param userDB the user database used for authentication
+     * @param userDatabase the user database used for authentication
      */
-    public LoginScreen(UserDatabase userDB)
+    public LoginScreen(UserDatabase userDatabase, GameDatabase gameLibrary, String reviewsXMLPath)
     {
-        this.userDB=userDB;
+        this.userDatabase=userDatabase;
+        this.gameLibrary = gameLibrary;
+        this.reviewsXMLPath = reviewsXMLPath;
+
         JFrame frame=buildFrame(); //build login screen first
         frame.pack(); //size the window
         frame.setLocationRelativeTo(null); //center it
@@ -89,7 +56,7 @@ public class LoginScreen
 
         //Outer background panel to fill the whole window with CREAM
         JPanel background=new JPanel(new GridBagLayout());
-        background.setBackground(CREAM);
+        background.setBackground(GUIColors.CREAM);
         background.setBorder(new EmptyBorder(60,60,60,60));
         frame.add(background);
         background.add(buildCard(frame)); // white rounded card in center of screen
@@ -103,7 +70,8 @@ public class LoginScreen
      */
     private JPanel buildCard(JFrame frame)
     {
-        loginPanel=new RoundedPanel(20,LIGHT);
+        //The main container panel holding all login UI components.
+        JPanel loginPanel = new RoundedPanel(20, GUIColors.LIGHT);
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
         loginPanel.setBorder(new EmptyBorder(60,150,60,150));
         loginPanel.setPreferredSize(new Dimension(1500,900));
@@ -111,61 +79,60 @@ public class LoginScreen
         //welcome sign
         JLabel subtitle=new JLabel("Welcome To");
         subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        subtitle.setForeground(DARK);
+        subtitle.setForeground(GUIColors.DARK);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //welcome tag
-        welcomeTag=new JLabel("ABBG Board Games");
+        //Displays the application title
+        JLabel welcomeTag = new JLabel("ABBGG Board Games");
         welcomeTag.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        welcomeTag.setForeground(DARK);
+        welcomeTag.setForeground(GUIColors.DARK);
         welcomeTag.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //username field
         JLabel userLabel= new JLabel("Username");
         userLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        userLabel.setForeground(DARK);
+        userLabel.setForeground(GUIColors.DARK);
 
         //password tag
         JLabel passLabel= new JLabel("Password");
         passLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        passLabel.setForeground(DARK);
+        passLabel.setForeground(GUIColors.DARK);
 
         usernameField = new JTextField(80);
         passwordField = new JPasswordField(80);
 
         //create account link
-        JLabel createLink=new JLabel("Create Account");
-        createLink.setFont(new Font("Segoe UI", Font.PLAIN,11));
-        createLink.setForeground(MID);
-        createLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        createLink.setAlignmentX(Component.LEFT_ALIGNMENT);
-        createLink.addMouseListener(new MouseAdapter()
+        JLabel createAccount=new JLabel("Create Account");
+        createAccount.setFont(new Font("Segoe UI", Font.PLAIN,11));
+        createAccount.setForeground(GUIColors.MID);
+        createAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        createAccount.setAlignmentX(Component.LEFT_ALIGNMENT);
+        createAccount.addMouseListener(new MouseAdapter()
         {
-            public void mouseEntered(MouseEvent e)
+            public void mouseEntered(MouseEvent event)
             {
-                createLink.setForeground(DARK);
+                createAccount.setForeground(GUIColors.DARK);
             }
-            public void mouseExited(MouseEvent e)
+            public void mouseExited(MouseEvent event)
             {
-                createLink.setForeground(MID);
+                createAccount.setForeground(GUIColors.MID);
             }
-            public void mouseClicked(MouseEvent e)
+            public void mouseClicked(MouseEvent event)
             {
-                JOptionPane.showMessageDialog(frame,
-                        "Account creation coming soon!",
-                        "Create Account",
-                        JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+                new AccountCreation(userDatabase, gameLibrary, reviewsXMLPath);
             }
         });
 
         //status label
         statusLabel=new JLabel(" ");
         statusLabel.setFont(new Font("Segoe UI",Font.PLAIN,11));
-        statusLabel.setForeground(ERR);
+        statusLabel.setForeground(GUIColors.ERR);
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //login button
-        loginButton=new RoundedButton("Log In");
+        JButton loginButton = new RoundedButton("Log In", 290, 50);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         //create action listener for loginbutton
         loginButton.addActionListener(event->
@@ -181,12 +148,12 @@ public class LoginScreen
             }
             else
             {
-                User user = userDB.validateCredentials(username, password);
+                User user = userDatabase.validateCredentials(username, password);
 
                 if (user != null)
                 {
                     frame.dispose();
-                    // open main screen here later
+                    new MainFrame(gameLibrary, userDatabase, user, reviewsXMLPath).setVisible(true);
                 }
                 else
                 {
@@ -215,7 +182,7 @@ public class LoginScreen
         loginPanel.add(Box.createVerticalStrut(6));
         loginPanel.add(passwordField);
         loginPanel.add(Box.createVerticalStrut(8));
-        loginPanel.add(leftAlign(createLink));
+        loginPanel.add(leftAlign(createAccount));
         loginPanel.add(Box.createVerticalStrut(8));
         loginPanel.add(loginButton);
         loginPanel.add(Box.createVerticalStrut(6));
@@ -237,100 +204,4 @@ public class LoginScreen
         p.add(c);
         return p;
     }
-    /**
-     * A custom JPanel with rounded corners and a configurable background color.
-     * Used to create the card-style UI container.
-     */
-    static class RoundedPanel extends JPanel
-    {
-        private final int radius;
-        private final Color background;
-        /**
-         * Constructs a rounded panel.
-         *
-         * @param radius the corner radius
-         * @param background the background color
-         */
-        public RoundedPanel(int radius, Color background) {
-            this.radius = radius;
-            this.background = background;
-            setOpaque(false);
-        }
-        /**
-         * Paints the rounded background of the panel.
-         *
-         * @param g the Graphics context
-         */
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(background);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 4, getHeight() - 4, radius, radius));
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
-    /**
-     * A custom JButton with rounded corners and hover effects.
-     */
-    static class RoundedButton extends JButton
-    {
-        private boolean hover=false;
-        /**
-         * Constructs a rounded button with the given label.
-         *
-         * @param text the button text
-         */
-        public RoundedButton(String text)
-        {
-            /**
-             * Constructs a rounded button with the given label.
-             *
-             * @param text the button text
-             */
-            super(text);
-            setOpaque(false);
-            setContentAreaFilled(false);
-            setFocusPainted(false);
-            setFont(new Font("Segoe UI", Font.BOLD,14));
-            setForeground(WHITE);
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            setPreferredSize(new Dimension(290,50));
-            //setMaximumSize(new Dimension(290,50));
-
-            addMouseListener(new MouseAdapter()
-            {
-                public void mouseEntered(MouseEvent e)
-                {
-                    hover=true;
-                    repaint();
-                }
-                public void mouseExited(MouseEvent e)
-                {
-                    hover=false;
-                    repaint();
-                }
-            });
-        }
-        /**
-         * Paints the button with a rounded shape and hover color effect.
-         *
-         * @param g the Graphics context
-         */
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(hover ? MID : DARK);
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 10, 10));
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
-
 }
