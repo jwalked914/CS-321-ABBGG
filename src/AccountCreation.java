@@ -8,57 +8,43 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 
-public class AccountCreation {
-
-    /** The main container panel holding all account creation UI components */
-    private JPanel accountCreationPanel;
-    /** Input field for the user's username */
-    private JTextField usernameField;
+public class AccountCreation
+{
+    /**Input field for the user's username */
+    private JTextField     usernameField;
     /** Input field for the user's password */
     private JPasswordField passwordField;
     /** Second input for the user's password to see if they typed it in correctly */
     private JPasswordField confirmField;
     /** Displays error or validation message for the user */
-    private JLabel statusLabel;
-    /** Button that submits the account creation form */
-    private JButton createAccountButton;
+    private JLabel         statusLabel;
     /** The user database used to place the user's newly made info */
-    private final UserDatabase userDB;
+    private final UserDatabase userDatabase;
 
-
-    /**
-     * Application entry point. Builds the backend database chain and
-     * launches the account creation screen on the Swing event dispatch thread.
-     *
-     * @param args command-line arguments (not used)
-     */
-    public static void main(String[] args)
-    {
-        GameDatabase gameDB = new GameDatabase();
-        UserDatabase userDB = new UserDatabase(gameDB);
-
-        SwingUtilities.invokeLater(() -> {
-            new AccountCreation(userDB);
-        });
-    }
+    /** Game library to pass through to the login screen */
+    private final GameDatabase gameLibrary;
+    /** Path to the reviews XML, passed through to the login screen */
+    private final String reviewsXMLPath;
 
     /**
      * Constructs the account creation screen and displays it.
      *
-     * @param userDB the user database used for authentication
+     * @param userDatabase the user database used for authentication
+     * @param gameLibrary the game library that will be used for login screen
+     * @param reviewsXMLPath the reviews file path that will be used by login screen
      */
-    public AccountCreation(UserDatabase userDB)
+    public AccountCreation(UserDatabase userDatabase, GameDatabase gameLibrary, String reviewsXMLPath)
     {
-        this.userDB=userDB;
+        this.userDatabase=userDatabase;
+        this.gameLibrary=gameLibrary;
+        this.reviewsXMLPath=reviewsXMLPath;
         JFrame frame = buildFrame();
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
     /**
      * Builds and configures the main application frame.
      *
@@ -77,15 +63,17 @@ public class AccountCreation {
         background.add(buildCard(frame)); // white rounded card in center of screen
         return frame;
     }
+
     /**
-     * Builds the central account creation card panel containing all UI components.
+     * Builds the central account creation card panel containing all UI components
      *
-     * @param frame the parent frame used for dialog interactions
-     * @return the constructed account creation panel
+     * @param frame frame used for dialog interactions
+     *
+     * @return the fully constructed account creation panel
      */
     private JPanel buildCard(JFrame frame)
     {
-        accountCreationPanel=new RoundedPanel(20,GUIColors.LIGHT);
+        JPanel accountCreationPanel = new RoundedPanel(20, GUIColors.LIGHT);
         accountCreationPanel.setLayout(new BoxLayout(accountCreationPanel, BoxLayout.Y_AXIS));
         accountCreationPanel.setBorder(new EmptyBorder(100,150,100,150));
         accountCreationPanel.setPreferredSize(new Dimension(1500,900));
@@ -122,7 +110,7 @@ public class AccountCreation {
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //login button
-        createAccountButton=new RoundedButton("Create Account",100,100);
+        JButton createAccountButton = new RoundedButton("Create Account",290,50);
         createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         //create action listener for createAccountButton
         createAccountButton.addActionListener(event->
@@ -137,13 +125,19 @@ public class AccountCreation {
                 statusLabel.revalidate();
                 statusLabel.repaint();
             }
+            else if (username.length()>=15)
+            {
+                statusLabel.setText("Username must be no more than 15 characters.");
+                statusLabel.revalidate();
+                statusLabel.repaint();
+            }
             else if (!password.equals(confirmPassword))
             {
                 statusLabel.setText("Passwords do not match.");
                 statusLabel.revalidate();
                 statusLabel.repaint();
             }
-            else if (userDB.isUsernameTaken(username))
+            else if (userDatabase.isUsernameTaken(username))
             {
                 statusLabel.setText("Username is taken.");
                 statusLabel.revalidate();
@@ -152,9 +146,9 @@ public class AccountCreation {
             else{
                 //users are initalized to non-admins
                 //userDatabase handles creating users internally
-                userDB.addUser(username,password,false);
+                userDatabase.addUser(username,password,false);
                 frame.dispose();
-                new LoginScreen(userDB);
+                new LoginScreen(userDatabase,gameLibrary,reviewsXMLPath);
             }
         });
 
@@ -179,6 +173,7 @@ public class AccountCreation {
 
         return accountCreationPanel;
     }
+
     /**
      * Wraps a component in a left-aligned panel for consistent layout.
      *
@@ -193,8 +188,4 @@ public class AccountCreation {
         p.add(c);
         return p;
     }
-
-
-
-
 }
