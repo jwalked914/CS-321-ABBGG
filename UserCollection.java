@@ -14,18 +14,14 @@
 public class UserCollection extends GameDatabase
 {
     private String name;
-    private final GameDatabase masterDB;
-
 
     /**
-     *  This is a  constructor that creates an empty collection with a name.
-     *  the masterDB will be used to check if the game is real and store the game into a collection and be used to retrieve it as well.
+     *  This is a  constructor that creates an empty collection with a user input name.
      */
-    public UserCollection(String name, GameDatabase masterDB)
+    public UserCollection(String name)
     {
         super();
         this.name = name;
-        this.masterDB = masterDB;
     }
 
 
@@ -37,9 +33,10 @@ public class UserCollection extends GameDatabase
      */
     public void addGame(Game game)
     {
-        if (!masterDB.getAllGames().contains(game)) return;
-        if (getAllGames().contains(game)) return;
+        if (!containsGame(game))
+        {
         super.addGame(game);
+        }
     }
 
 
@@ -51,7 +48,6 @@ public class UserCollection extends GameDatabase
     public void removeGame(Game game)
     {
 
-        if (!getAllGames().contains(game)) return;
         super.removeFromMaps(game);
     }
 
