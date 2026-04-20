@@ -1,0 +1,27 @@
+import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        SwingUtilities.invokeLater(()->
+        {File gamesFile=new File("bgg90Games.xml");
+        File usersFile=new File("usersInfo.xml");
+        String reviewsPath="reviews.xml";
+
+        //Load in Game Database
+        FileScannerXML gameScanner= new FileScannerXML(gamesFile,null);
+        ArrayList<Game> gameList=gameScanner.parseGamesFromXML();
+        GameDatabase gameDatabase=new GameDatabase(gameList);
+
+        //Load in User Database
+        FileScannerXML userScanner=new FileScannerXML(usersFile,gameDatabase);
+        ArrayList<User> userList=userScanner.parseUsersFromXML();
+        UserDatabase userDatabase=new UserDatabase(gameDatabase);
+
+        new LoginScreen(userDatabase, gameDatabase,reviewsPath);
+    });
+}
+}
