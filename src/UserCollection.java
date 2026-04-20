@@ -10,6 +10,7 @@
 public class UserCollection extends GameDatabase
 {
     private final String name;
+    private ArrayList<Game> unsavedChanges;
 
     /**
      *  Constructor that creates an empty collection with user-inputted name.
@@ -18,11 +19,12 @@ public class UserCollection extends GameDatabase
     {
         super();
         this.name = name;
+        this.unsavedChanges = new ArrayList<>();
     }
 
 
     /**
-     * Adds game object to a collection.
+     * Adds game object to a collection as an unsaved change.
      *
      * @param game add game
      */
@@ -30,9 +32,24 @@ public class UserCollection extends GameDatabase
     {
         if(!containsGame(game))
         {
-            super.addGame(game);
+            unsavedChanges.add(game);
         }
     }
+
+    /**
+     * Save changes of added games to collection
+     * Clears the unsaved changes array at the end
+     */
+    public void saveChanges()
+    {
+        for(int i = 0; i < unsavedChanges.size(); i++) {
+            if (!containsGame(unsavedChanges(i))) {
+                super.addGame(unsavedChanges.get(i));
+            }
+        }
+        unsavedChanges.clear();
+    }
+
 
 
     /**
