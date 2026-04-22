@@ -1,8 +1,10 @@
+package model;
+
 import java.util.ArrayList;
 
 /**
  *  Represents a board game with its core attributes.
- *  Each Game object stores its unique ID, name, description, publication year,
+ *  Each model.Game object stores its unique ID, name, description, publication year,
  *  minimum and maximum player counts, and lists of categories and mechanics.
  */
 public class Game {
@@ -24,8 +26,6 @@ public class Game {
      *
      * @param id the game id
      * @param name the game name
-     * @param thumbnailURL the game thumbnail image URL
-     * @param imageURL the game image URL
      * @param desc the game description
      * @param pubYear the game publication year as a string
      * @param minPlayer required minimum player count as string; returns as an int
@@ -34,7 +34,7 @@ public class Game {
      * @param bgCategories list of game categories
      * @param bgMechanics list of game mechanics
      */
-    Game(String id, String name, String thumbnailURL, String imageURL, String desc, String pubYear, String minPlayer, String maxPlayer, String playingTime, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
+    public Game(String id, String name, String thumbnailURL, String imageURL, String desc, String pubYear, String minPlayer, String maxPlayer, String playingTime, ArrayList<String> bgCategories, ArrayList<String> bgMechanics)
     {
         this.id = stringToInt(id);
         this.name = name;
@@ -131,23 +131,13 @@ public class Game {
     }
 
     /**
-     *  Return the game's average play time
-     *
-     * @return game average playtime
-     */
-    public int getPlayingTime()
-    {
-        return playingTime;
-    }
-
-    /**
      * Returns a list of a game's playstyle categories.
      *
      * @return list of game categories
      */
     public ArrayList<String> getBgCategories()
     {
-        return new ArrayList<>(bgCategories);
+        return bgCategories;
     }
 
     /**
@@ -157,7 +147,7 @@ public class Game {
      */
     public ArrayList<String> getBgMechanics()
     {
-        return new ArrayList<>(bgMechanics);
+        return bgMechanics;
     }
 
     /**
