@@ -1,4 +1,7 @@
+package data;
+
 import java.util.*;
+import model.Game;
 
 /**
  * Represents a database of board games that provides access to and
@@ -18,10 +21,10 @@ public class GameDatabase
     protected HashMap<String, HashSet<Game>> mechanicMap;
 
     /**
-     * Constructs a master game database of Game objects.
+     * Constructs a master game database of model.Game objects.
      * @param gameDB parsed boardgame array list
      */
-    protected GameDatabase(ArrayList<Game> gameDB)
+    public GameDatabase(ArrayList<Game> gameDB)
     {
         this.games = gameDB;
         buildCategoryAndMechanicSets();
@@ -43,7 +46,6 @@ public class GameDatabase
         this.mechanicMap = new HashMap<>();
 
     }
-
 
     public void printAllGames()
     {
@@ -113,16 +115,67 @@ public class GameDatabase
         HashSet<Game> results = new HashSet<>();
         String lowerQuery = Query.toLowerCase();
 
-        if(wordMap.containsKey(lowerQuery)) // add any games with exact name matches
+        if (lowerQuery.isEmpty())
         {
-            results.addAll(wordMap.get(lowerQuery));
+            return new ArrayList<>(games);
         }
 
-        for (String key: wordMap.keySet()) // handles substring matches
+        //split query into individual words
+        String[] queryWords=lowerQuery.split("\\s+");
+
+        //single word queries
+        if (queryWords.length==1)
         {
-            if(key.contains(lowerQuery) && !key.equals(lowerQuery)) // compares query to keys of wordMap
-            {                                                       // but prevents double adding exact matches
-                results.addAll(wordMap.get(key));
+            String word=queryWords[0];
+
+            if(wordMap.containsKey(word)) //add games with exact word matches
+            {
+                results.addAll(wordMap.get(word));
+            }
+
+            for (String key: wordMap.keySet()) // handles substring matches
+            {
+                if(key.contains(lowerQuery) && !key.equals(lowerQuery)) // compares query to keys of wordMap
+                {                                                       // but prevents double adding exact matches
+                    results.addAll(wordMap.get(key));
+                }
+            }
+        }
+        //multi word queries find games matching all words
+        else
+        {
+            HashSet<Game> candidates=new HashSet<>();
+            String firstWord=queryWords[0];
+
+            if(wordMap.containsKey(firstWord))
+            {
+                candidates.addAll(wordMap.get(firstWord));
+            }
+            for(String key:wordMap.keySet())
+            {
+                if(key.contains(firstWord))
+                {
+                    candidates.addAll(wordMap.get(key));
+                }
+            }
+            //filter games with names containing all query word
+            for (Game game:candidates)
+            {
+                String gameName=game.getName().toLowerCase();
+                boolean matchesAll=true;
+
+                for(String queryWord:queryWords)
+                {
+                    if(!gameName.contains(queryWord))
+                    {
+                        matchesAll=false;
+                        break;
+                    }
+                }
+                if(matchesAll)
+                {
+                    results.add(game);
+                }
             }
         }
 
@@ -300,7 +353,7 @@ public class GameDatabase
 
         for(Game g: games)
         {
-        ArrayList<String> categories = g.getBgCategories();
+            ArrayList<String> categories = g.getBgCategories();
             for(String cat: categories)
             {
                 HashSet<Game> set = categoryMap.get(cat);
