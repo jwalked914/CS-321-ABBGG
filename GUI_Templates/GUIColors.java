@@ -1,3 +1,5 @@
+package viewAndControl;
+
 import java.awt.Color;
 public class GUIColors
 {
