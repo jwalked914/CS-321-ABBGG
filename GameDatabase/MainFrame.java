@@ -121,6 +121,10 @@ public class MainFrame extends JFrame
      * */
     public void logout()
     {
+        for (UserCollection c : currentUser.getCollections())
+        {
+            c.saveChanges();
+        }
         dispose();
         //bring users back to the login page
         currentUser=null;
