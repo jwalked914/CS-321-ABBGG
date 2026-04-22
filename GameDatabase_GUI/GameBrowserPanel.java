@@ -1,60 +1,75 @@
-/**
- * A browser panel implementation for displaying the full game database.
- * Extends BrowserPanel and provides game-specific implementations
- * of the Template Method primitive operations.
- *
- * Design Pattern: Template Method — implements the primitive operations
- * defined in BrowserPanel to display game cards instead of collections.
- */
-import javax.imageio.ImageIO;
+package viewAndControl;
+
+import data.GameDatabase;
+import model.Game;
+import model.User;
+import model.UserCollection;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.*;
+import java.util.List;
 
+/**
+ * A browser panel implementation for displaying the full game database.
+ * Extends BrowserPanel and provides game-specific implementations
+ * of the Template Method primitive operations.
+ * Design Pattern:
+ * Template Method — implements the primitive operations
+ * defined in BrowserPanel to display game cards instead of collections.
+ */
 public class GameBrowserPanel extends BrowserPanel
 {
     private GameCardListener cardListener;
     private final GameDatabase gameDB;
-    private ArrayList<Game> filteredGames;
+    private final User user;
+    private List<GameCard> gameCards = new ArrayList<>();
+    private List<Game> filteredGames;
     private String currentQuery = "";
-    private HashSet<String> selectedCategories = new HashSet<>();
-    private HashSet<String> selectedMechanics = new HashSet<>();
+    private Set<String> selectedCategories = new HashSet<>();
+    private Set<String> selectedMechanics = new HashSet<>();
 
     /**
      * Constructs the game browser panel by invoking the parent layout algorithm.
      */
-    public GameBrowserPanel(GameDatabase gameDB)
+    public GameBrowserPanel(GameDatabase gameDB, User user)
     {
         super();
         this.gameDB = gameDB;
+        this.user = user;
         filteredGames = gameDB.getAllGames();
+        buildGameCards();
+        updateTitle(getTitle());
         refresh();
 
-
-        this.addMouseListener(new java.awt.event.MouseAdapter()
-        {
+        // Wait until component is actually visible on screen
+        addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e)
-            {
-                requestFocusInWindow();
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                updateFilterButton();
+                removeComponentListener(this);
             }
         });
     }
     /**
      * Returns the title for the games panel.
-     * @return "ABBGG Games"
+     *
+     * @return "ABBGG Games Database" for Master Database or collection name if model.User Collection
      */
     public String getTitle()
     {
-        return "ABBGG Games";
+        if(gameDB instanceof UserCollection)
+        {
+            return ((UserCollection) gameDB).getName();
+        }
+
+        return "ABBGG Home";
     }
     /**
      * Returns the placeholder text for the games search bar.
-     * @return "Search for Game"
+     * @return "Search for model.Game"
      */
     public String getSearchHint()
     {
@@ -63,87 +78,17 @@ public class GameBrowserPanel extends BrowserPanel
     /**
      * Builds and returns a single game card for the given index.
      * @param index the position of the card in the grid
-     * @return a RoundedPanel displaying the game label
+     * @return a viewAndControl.RoundedPanel displaying the game label
      */
     public JPanel buildCard(int index)
     {
-        RoundedPanel card = new RoundedPanel(10, GUIColors.CREAM);
-        card.setLayout(new BorderLayout());
-        card.setPreferredSize(new Dimension(160, 160));
-
         Game game = filteredGames.get(index);
-
-        JLabel nameLabel = new JLabel(game.getName(), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        nameLabel.setForeground(GUIColors.DARK);
-
-        JLabel imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
-        imageLabel.setForeground(GUIColors.DARK);
-        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-
-        new SwingWorker<ImageIcon, Void>()
+        for (GameCard card : gameCards)
         {
-            protected ImageIcon doInBackground() throws Exception {
-                URL url = new URL(game.getThumbnailURL());
-                BufferedImage img = ImageIO.read(url);
-
-                BufferedImage scaled = new BufferedImage(130, 130, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = scaled.createGraphics();
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.drawImage(img, 0, 0 ,130, 130, null);
-                g2d.dispose();
-
-                return new ImageIcon(scaled);
-            }
-
-            protected void done() {
-                try
-                {
-                    imageLabel.setText("");
-                    imageLabel.setIcon(get());
-                }
-                catch (Exception e)
-                {
-                    imageLabel.setText("No Image");
-                }
-            }
-        }.execute();
-
-        card.add(imageLabel, BorderLayout.CENTER);
-        card.add(nameLabel, BorderLayout.SOUTH);
-
-        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        card.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e)
-            {
-                if(cardListener != null)
-                    cardListener.onGameSelected(game);
-                    // GAME DESC LOGIC GOES HERE
-            }
-
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e)
-            {
-                card.setBackground(GUIColors.LIGHT);
-                card.repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e)
-            {
-                card.setBackground(GUIColors.CREAM);
-                card.repaint();
-            }
-        });
-
-
-
-        return card;
+            if (card.getGame() == game)
+                return card;
+        }
+        return null;
     }
     /**
      *  Builds and returns filter dropdown with the categories and mechanics
@@ -260,6 +205,7 @@ public class GameBrowserPanel extends BrowserPanel
             selectedMechanics.clear();
             categoryCheckboxMap.values().forEach(box -> box.setSelected(false));
             mechanicCheckboxMap.values().forEach(box -> box.setSelected(false));
+            buildGameCards();
             applyFilters();
             dropdown.setVisible(false);
         });
@@ -307,7 +253,6 @@ public class GameBrowserPanel extends BrowserPanel
         filteredGames = result;
         refresh();
     }
-
     public interface GameCardListener
     {
         void onGameSelected(Game game);
@@ -329,7 +274,7 @@ public class GameBrowserPanel extends BrowserPanel
     @Override
     public void onSearch(String query)
     {
-        currentQuery = query;
+        currentQuery = query.trim();
         applyFilters();
     }
     /**
@@ -340,6 +285,31 @@ public class GameBrowserPanel extends BrowserPanel
     public int getCardCount()
     {
         return filteredGames.size() ;
+    }
+
+    /**
+     * Builds and caches all viewAndControl.GameCard instances from the current filtered games list.
+     * Each card is initialized with its remove and click callbacks.
+     */
+    private void buildGameCards()
+    {
+        gameCards.clear();
+        for (int i = 0; i < filteredGames.size(); i++)
+        {
+            Game game = filteredGames.get(i);
+            gameCards.add(new GameCard(
+                    game,
+                    gameDB instanceof UserCollection,
+                    user,
+                    gameDB,
+                    () -> {
+                        filteredGames.remove(game);
+                        gameCards.removeIf(c -> c.getGame() == game);
+                        refresh();
+                    },
+                    () -> { if (cardListener != null) cardListener.onGameSelected(game); }
+            ));
+        }
     }
 
 }
