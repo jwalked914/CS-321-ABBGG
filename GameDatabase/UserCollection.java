@@ -45,6 +45,20 @@ public class UserCollection extends GameDatabase
         super.addGame(game);
     }
 
+     /**
+     * Save changes of added games to collection
+     * Clears the unsaved changes array at the end
+     */
+    public void saveChanges()
+    {
+        for(int i = 0; i < unsavedChanges.size(); i++) {
+            if (!containsGame(unsavedChanges(i))) {
+                super.addGame(unsavedChanges.get(i));
+            }
+        }
+        unsavedChanges.clear();
+    }
+
 
     /**
      * This checks if the game exists and if it already is not in the collection
