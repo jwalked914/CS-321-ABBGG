@@ -1,6 +1,9 @@
 package viewAndControl;
 
 import java.awt.Color;
+/**
+* This class holds all the colors used throughput the application.
+*/
 public class GUIColors
 {
         public static final Color DARK  = new Color(0x72, 0x7D, 0x73);
