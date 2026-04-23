@@ -125,6 +125,7 @@ public class MainFrame extends JFrame
      * */
     public void logout()
     {
+        userDatabase.saveUsers();
         dispose();
         //bring users back to the login page
         currentUser=null;
