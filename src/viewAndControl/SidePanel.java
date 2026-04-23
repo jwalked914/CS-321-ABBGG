@@ -1,14 +1,18 @@
 package viewAndControl;
 
+import model.User;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
-import model.User;
+
+/**
+ * SidePanel is used for quick navigation and user identifications.
+ * Provides quick access to buttons for ore navigations(Home,Library
+ * Settings, Logout). It holds the user's username and profile photo.
+ */
 public class SidePanel extends JPanel
 {
-    /** The main container panel holding all viewAndControl.SidePanel UI components */
-    //private JPanel createdSidePanel;
     /** Button to send the user to their library */
     private JButton libraryButton;
     /** Button to send the user to the settings menu */
@@ -19,13 +23,17 @@ public class SidePanel extends JPanel
     private JButton homeButton;
     /** Label displaying profile picture */
     private JLabel profilePictureLabel;
-
+    /** Reference to the main application frame for navigation actions */
     private final MainFrame mainFrame;
+    /** The currently logged-in user whose data is displayed */
     private final User currentUser;
-//    private static model.User currentUser;
-//    private String username;
 
-    /** Constructs the viewAndControl.SidePanel screen and displays it. */
+    /**
+     * Constructs the SidePanel and initializes all UI components.
+     *
+     * @param mainFrame   reference to the main application frame used for navigation
+     * @param currentUser the currently logged-in user whose data is displayed
+     */
     public SidePanel(MainFrame mainFrame, User currentUser)
     {
         //this.currentUser=currentUser;
@@ -34,11 +42,14 @@ public class SidePanel extends JPanel
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(GUIColors.LIGHT);
         setBorder(new EmptyBorder(10, 20, 10, 20));
-        setPreferredSize(new Dimension(200, 900));
+        setPreferredSize(new Dimension(200, 750));
 
         buildComponents();
     }
-
+    /**
+     * Builds and arranges all UI components inside the sidebar,
+     * including profile display and navigation buttons.
+     */
     private void buildComponents()
     {
         //Profile Picture
@@ -54,7 +65,7 @@ public class SidePanel extends JPanel
 
         // Username label
         JLabel userLabel = new JLabel(currentUser.getUsername());
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        userLabel.setFont(new Font("Arial Black", Font.BOLD, 18));
         userLabel.setForeground(GUIColors.DARK);
         userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -94,7 +105,10 @@ public class SidePanel extends JPanel
         //load profile photo
         loadProfilePicture();
     }
-
+    /**
+     * Loads the user's profile picture from user's computer and scales it to fit the UI.
+     * If no valid image exists, a placeholder is displayed instead.
+     */
     private void loadProfilePicture()
     {
         String picturePath=currentUser.getProfilePicturePath();
@@ -121,7 +135,7 @@ public class SidePanel extends JPanel
             String placeHolder= ("<3");
             profilePictureLabel.setIcon(null);
             profilePictureLabel.setText(placeHolder);
-            profilePictureLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+            profilePictureLabel.setFont(new Font("Arial Black", Font.BOLD, 28));
             profilePictureLabel.setForeground(GUIColors.DARK);
         }
     }
