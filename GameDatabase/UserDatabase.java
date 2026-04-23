@@ -15,16 +15,23 @@ import javax.xml.transform.dom.DOMSource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.transform.stream.StreamResult;
 
+/**
+ * The UserDatabase manages all users in the system and handles persistence to XML.
+ * Functionalities include loading users from the XML, validating login credentials,
+ * adding and deleting users, managing admin privileges, managing user collections, and saving changes
+ * to the XML
+ */
 public class UserDatabase
 {
-    private final HashMap<String, User> userList=new HashMap<>();
+    private final Map<String, User> userList=new HashMap<>();
     private final File userXMLPath;
     private final GameDatabase gameDatabase;
 
     /**
-     * Constructs a data.UserDatabase and loads existing users from the XML file.
+     * Constructs a UserDatabase and loads existing users from the XML file.
      *
      * @param gameDatabase the game database used to resolve game references
      */
@@ -38,16 +45,17 @@ public class UserDatabase
      * Loads users from the XML file into memory.
      * If the file does not exist, no users are loaded.
      */
-    public void loadUsers()
+    private void loadUsers()
     {
         File xmlFile=userXMLPath;
         if(!xmlFile.exists())
         {
-            return; // first run, no file yet
+            return;
         }
-
+        //parse users from XML file
         FileScannerXML scanner=new FileScannerXML(xmlFile,gameDatabase);
         ArrayList<User> userArrayList=scanner.parseUsersFromXML();
+        //store users in hashmap for fast lookup by username
         for (User user: userArrayList)
         {
             userList.put(user.getUsername(),user);
@@ -59,12 +67,13 @@ public class UserDatabase
      *
      * @param username the username entered
      */
-    public User loadUserOnLogin(String username)
+    private User loadUserOnLogin(String username)
     {
         File xmlFile=userXMLPath;
         if (!xmlFile.exists()) {
             return null;
         }
+        // reload users
         FileScannerXML scanner = new FileScannerXML(xmlFile, gameDatabase);
         ArrayList<User> userArrayList = scanner.parseUsersFromXML();
         //get user that we want to laod in
@@ -91,8 +100,6 @@ public class UserDatabase
         {
             return null; //if username doesnt exist return null
         }
-
-        User cachedUser=userList.get(username);
 
         if(!user.getPassword().equals(password))
         {
@@ -195,7 +202,7 @@ public class UserDatabase
         User user = userList.get(username);
         if (user == null)
         {
-            throw new IllegalArgumentException("model.User not found: " + username);
+            throw new IllegalArgumentException("User not found: " + username);
         }
         user.addCollection(collection);
         writeToXML();
@@ -211,6 +218,7 @@ public class UserDatabase
     {
         try
         {
+            //create XML document
             DocumentBuilderFactory userFileFactory=DocumentBuilderFactory.newInstance();
             DocumentBuilder userFileBuilder=userFileFactory.newDocumentBuilder();
             Document userDoc=userFileBuilder.newDocument();
@@ -220,6 +228,7 @@ public class UserDatabase
 
             for (User user: userList.values())
             {
+                // create user node
                 Element userElement=userDoc.createElement("user");
                 userElement.setAttribute("username", user.getUsername());
                 userElement.setAttribute("password", user.getPassword());
@@ -239,16 +248,16 @@ public class UserDatabase
 
                     for (Game game: collection.getAllGames())
                     {
+                        // store game reference by id
                         Element gameIdElement=userDoc.createElement("gameId");
                         gameIdElement.setAttribute("value", String.valueOf(game.getID()));
                         collectionElement.appendChild(gameIdElement);
                     }
                 }
-                //PLACEHOLDER FOR REVIEWS?
                 Element reviewsElement=userDoc.createElement("reviews");
                 userElement.appendChild(reviewsElement);
             }
-
+            // write XML document to file
             TransformerFactory transformerFactory=TransformerFactory.newInstance();
             Transformer transformer=transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT,"yes");

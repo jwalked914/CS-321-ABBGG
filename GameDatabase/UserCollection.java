@@ -1,22 +1,14 @@
-package model; /**
- * Collection class allows users to store unlimited games
- * and create unlimited amount of collections
- * It also inherits from the data.GameDatabase to access the full game library
- */
-
-
+package model;
 import data.GameDatabase;
 
 /**
- * model.UserCollection inherits data.GameDatabase
- * This class will have methods that add, remove, and shows that it contains the users games
+ * UserCollection class allows users to store games
+ * and create collections. It also inherits from the GameDatabase to access the full game library
+ *This class will have methods that add, remove, and shows that it contains the users games
  */
 public class UserCollection extends GameDatabase
 {
     private String name;
-    //private final data.GameDatabase masterDB;
-
-
     /**
      *  This is a  constructor that creates an empty collection with a name.
      *  the masterDB will be used to check if the game is real and store the game into a collection and be used to retrieve it as well.
@@ -27,7 +19,6 @@ public class UserCollection extends GameDatabase
         this.name = name;
         //this.masterDB = masterDB;
     }
-
 
     /**
      * This method Adds a game by ID to a collection
@@ -44,21 +35,6 @@ public class UserCollection extends GameDatabase
         }
         super.addGame(game);
     }
-
-     /**
-     * Save changes of added games to collection
-     * Clears the unsaved changes array at the end
-     */
-    public void saveChanges()
-    {
-        for(int i = 0; i < unsavedChanges.size(); i++) {
-            if (!containsGame(unsavedChanges(i))) {
-                super.addGame(unsavedChanges.get(i));
-            }
-        }
-        unsavedChanges.clear();
-    }
-
 
     /**
      * This checks if the game exists and if it already is not in the collection

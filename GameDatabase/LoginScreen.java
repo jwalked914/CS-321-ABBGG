@@ -12,7 +12,7 @@ import model.User;
 
 /**
  * Displays the login screen for the ABBG Board Games application.
- * Handles user authentication by validating credentials against the data.UserDatabase.
+ * Handles user authentication by validating credentials against the UserDatabase.
  * On successful login, closes the login window and opens the main screen.
  *
  */
@@ -82,25 +82,25 @@ public class LoginScreen
 
         //welcome sign
         JLabel subtitle=new JLabel("Welcome To");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        subtitle.setFont(new Font("Montserrat", Font.PLAIN, 13));
         subtitle.setForeground(GUIColors.DARK);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //welcome tag
         //Displays the application title
         JLabel welcomeTag = new JLabel("ABBGG Board Games");
-        welcomeTag.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        welcomeTag.setFont(new Font("Arial Black", Font.BOLD, 22));
         welcomeTag.setForeground(GUIColors.DARK);
         welcomeTag.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //username field
         JLabel userLabel= new JLabel("Username");
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        userLabel.setFont(new Font("Arial Black", Font.BOLD, 11));
         userLabel.setForeground(GUIColors.DARK);
 
         //password tag
         JLabel passLabel= new JLabel("Password");
-        passLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        passLabel.setFont(new Font("Arial Black", Font.BOLD, 11));
         passLabel.setForeground(GUIColors.DARK);
 
         usernameField = new JTextField(80);
@@ -108,7 +108,7 @@ public class LoginScreen
 
         //create account link
         JLabel createAccount=new JLabel("Create Account");
-        createAccount.setFont(new Font("Segoe UI", Font.PLAIN,11));
+        createAccount.setFont(new Font("Arial Black", Font.PLAIN,11));
         createAccount.setForeground(GUIColors.MID);
         createAccount.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         createAccount.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -131,7 +131,7 @@ public class LoginScreen
 
         //status label
         statusLabel=new JLabel(" ");
-        statusLabel.setFont(new Font("Segoe UI",Font.PLAIN,11));
+        statusLabel.setFont(new Font("Arial Black",Font.PLAIN,11));
         statusLabel.setForeground(GUIColors.ERR);
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -171,7 +171,6 @@ public class LoginScreen
 
         passwordField.addActionListener(loginButton.getActionListeners()[0]);
 
-
         //assemble login parts
         loginPanel.add(Box.createVerticalStrut(4));
         loginPanel.add(subtitle);
@@ -197,15 +196,15 @@ public class LoginScreen
     /**
      * Wraps a component in a left-aligned panel for consistent layout.
      *
-     * @param c the component to align
+     * @param component the component to align
      * @return a JPanel containing the component aligned to the left
      */
-    private JPanel leftAlign(JComponent c)
+    private JPanel leftAlign(JComponent component)
     {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        p.setOpaque(false);
-        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, c.getPreferredSize().height + 2));
-        p.add(c);
-        return p;
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, component.getPreferredSize().height + 2));
+        panel.add(component);
+        return panel;
     }
 }

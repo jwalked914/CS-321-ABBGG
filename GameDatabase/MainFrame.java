@@ -69,11 +69,11 @@ public class MainFrame extends JFrame
         homePanel.setCardListener(this::showGameDescription); //navigate to gameDescription
 
         libraryBrowserPanel= new CollectionBrowserPanel(currentUser);
-        libraryBrowserPanel.setCardListener(this::navigateCollection); //navigate to collection sreen
+        libraryBrowserPanel.setCardListener(this::navigateCollection); //navigate to collection screen
 
         gameDescriptionPanel=new GameDescriptionPanel(currentUser, reviewsXMLPath);
         this.userSettingsPanel= new UserSettingsPanel(currentUser, this,userDatabase);
-        this.manageUsersPanel= new ManageUsersPanel(userDatabase);
+        this.manageUsersPanel= new ManageUsersPanel(userDatabase,currentUser);
 
         //add side panel
         this.sidePanel = new SidePanel(this, currentUser);
@@ -121,10 +121,6 @@ public class MainFrame extends JFrame
      * */
     public void logout()
     {
-        for (UserCollection c : currentUser.getCollections())
-        {
-            c.saveChanges();
-        }
         dispose();
         //bring users back to the login page
         currentUser=null;

@@ -119,23 +119,38 @@ public class User
     }
 
     /**
-     * Returns isAdmin
+     * Returns whether the user has administrative privileges.
+     *
+     * @return true if the user is an admin, false otherwise
      */
     public boolean getIsAdmin()
     {
         return isAdmin;
     }
 
+    /**
+     * Sets whether the user has administrative privileges.
+     *
+     * @param isAdmin true to grant admin privileges, false to revoke them
+     */
     public void setIsAdmin(boolean isAdmin)
     {
         this.isAdmin=isAdmin;
     }
-
+    /**
+     * Returns the file path of the user's profile picture.
+     *
+     * @return the profile picture file path, or null if none is set
+     */
     public String getProfilePicturePath()
     {
         return profilePicturePath;
     }
-
+    /**
+     * Sets the file path for the user's profile picture.
+     *
+     * @param profilePicturePath the path to the profile image file
+     */
     public void setProfilePicturePath(String profilePicturePath)
     {
         this.profilePicturePath=profilePicturePath;

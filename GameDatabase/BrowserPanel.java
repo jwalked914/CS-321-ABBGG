@@ -8,16 +8,15 @@ import java.awt.*;
  * Abstract base panel for browsing either games or collections.
  * Defines the overall layout algorithm: header, grid, and filter dropdown.
  *
- * Design Pattern Used
- * Template Method — this class defines the skeleton of the
+ * Design Pattern:
+ * Template Method
+ * This class defines the skeleton of the
  * browser UI in buildHeader() and buildGrid(). Subclasses implement the
  * primitive operations getTitle(), getSearchHint(), and buildCard() to
  * provide type-specific behavior without changing the overall structure.
  */
 public abstract class BrowserPanel extends JPanel
 {
-
-    private javax.swing.Timer resizeTimer;
     protected JPanel gridPanel;
     protected JScrollPane scrollPane;
     private JLabel titleLabel;
@@ -33,23 +32,6 @@ public abstract class BrowserPanel extends JPanel
         this.setLayout(new BorderLayout());
         this.setBackground(GUIColors.MID);
         buildHeader();
-
-        // Prevents screen updating for every resize adjustment
-        this.addComponentListener(new java.awt.event.ComponentAdapter()
-        {
-            @Override
-            public void componentResized(java.awt.event.ComponentEvent e)
-            {
-                if (resizeTimer != null) resizeTimer.stop();
-                resizeTimer = new javax.swing.Timer(200, event ->
-                {
-                    refresh();
-                    resizeTimer.stop();
-                });
-                resizeTimer.start();
-            }
-        });
-
     }
     /**
      * Returns the placeholder text displayed in the search field.
@@ -77,13 +59,11 @@ public abstract class BrowserPanel extends JPanel
         topRow.setBackground(GUIColors.DARK);
 
         titleLabel = new JLabel(getTitle());
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD,22));
+        titleLabel.setFont(new Font("Arial Black", Font.BOLD,22));
         titleLabel.setForeground(GUIColors.LIGHT);
-
-
         //build search field
         JTextField searchField = new JTextField(getSearchHint());
-        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        searchField.setFont(new Font("Arial Black", Font.PLAIN, 13));
         searchField.setBackground(GUIColors.CREAM);
         searchField.setForeground(GUIColors.DARK);
         searchField.setPreferredSize(new Dimension(220, 35));
@@ -91,12 +71,13 @@ public abstract class BrowserPanel extends JPanel
                 BorderFactory.createLineBorder(GUIColors.DARK, 1, true),
                 new EmptyBorder(4, 8, 4, 8)
         ));
-
+        //placeholder for search field
         searchField.addFocusListener(new java.awt.event.FocusAdapter()
         {
             @Override
             public void focusGained(java.awt.event.FocusEvent e)
             {
+                //when user clicks into the field remove the placeholder
                 if (searchField.getText().equals(getSearchHint()))
                 {
                     searchField.setText("");
@@ -107,6 +88,7 @@ public abstract class BrowserPanel extends JPanel
             @Override
             public void focusLost(java.awt.event.FocusEvent e)
             {
+                //if the user leaves the field empty return to placeholder
                 if(searchField.getText().isEmpty())
                 {
                     searchField.setText(getSearchHint());
@@ -114,20 +96,37 @@ public abstract class BrowserPanel extends JPanel
                 }
             }
         });
-
+        //when the user starts to type, being search filtering(detect inserting,deleting)
+        //it will monitor text changes and filter cards
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener()
         {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { handleSearch(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { handleSearch(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { handleSearch(); }
+            //insertUpdate, removeUpdate, and changedUpdate will handle any text changes that occur
+            public void insertUpdate(javax.swing.event.DocumentEvent e)
+            {
+                handleSearch();
+            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e)
+            {
+                handleSearch();
+            }
+            public void changedUpdate(javax.swing.event.DocumentEvent e)
+            {
+                handleSearch();
+            }
 
+            /**
+             * Extracts current search text and triggers filtering.
+             * Ignores the placeholder text hint
+             */
             private void handleSearch()
             {
                 String text = searchField.getText();
+                //if the search has real text pass it to onSearch to begin filter
                 if(!text.equals(getSearchHint()))
                 {
                     onSearch(text);
                 }
+                //if the field shows the placeholder treat it as empty and clear filtering
                 else
                 {
                     onSearch("");
@@ -144,7 +143,7 @@ public abstract class BrowserPanel extends JPanel
 
         //build filter button
         filterButton = new JButton("Filter");
-        filterButton.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        filterButton.setFont(new Font("Arial Black", Font.PLAIN, 13));
         filterButton.setBackground(GUIColors.CREAM);
         filterButton.setForeground(GUIColors.DARK);
         filterButton.setPreferredSize(new Dimension(110, 28));
@@ -159,7 +158,7 @@ public abstract class BrowserPanel extends JPanel
             buildFilterPanel().show(filterButton, 0 , filterButton.getHeight());
         });
 
-        bottomRow.add(filterButton,BorderLayout.SOUTH);
+        bottomRow.add(filterButton);
 
         headerPanel.add(topRow, BorderLayout.NORTH);
         headerPanel.add(bottomRow, BorderLayout.SOUTH);
@@ -174,7 +173,6 @@ public abstract class BrowserPanel extends JPanel
         gridPanel = new JPanel(new GridLayout(0,getColumnCount(),10,10));
         gridPanel.setBackground(GUIColors.MID);
         gridPanel.setBorder(new EmptyBorder(10,10,10,10));
-
 
         for (int i = 0; i < getCardCount(); i++)
         {

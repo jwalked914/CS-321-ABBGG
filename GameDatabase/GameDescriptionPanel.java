@@ -49,7 +49,7 @@ public class GameDescriptionPanel extends JPanel
     private final JRadioButton [] ratingButtons;
     /** The game currently being displayed. Updated via setDisplayedGame. */
     private Game currentGame;
-    /** Placeholder for data.GameDatabase ( used for file scanner)*/
+    /** Placeholder for GameDatabase ( used for file scanner)*/
     private final GameDatabase holderGameDB=null;
 
     /**
@@ -74,19 +74,19 @@ public class GameDescriptionPanel extends JPanel
 
         // components for model.Review Form
         JLabel userField= new JLabel(currentUser.getUsername());
-        userField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        userField.setFont(new Font("Arial Black", Font.PLAIN, 13));
         userField.setForeground(GUIColors.DARK);
         userField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel textLabel= new JLabel("Review");
-        textLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        textLabel.setFont(new Font("Arial Black", Font.PLAIN, 13));
         textLabel.setForeground(GUIColors.LIGHT);
         textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JTextArea textField= new JTextArea();
         textField.setBackground(GUIColors.CREAM);
         textField.setForeground(GUIColors.DARK);
-        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        textField.setFont(new Font("Arial Black", Font.PLAIN, 13));
         textField.setLineWrap(true);
         textField.setWrapStyleWord(true);
         textField.setRows(4); //set starting height for text field, will expand as user types if needed
@@ -94,7 +94,7 @@ public class GameDescriptionPanel extends JPanel
         // ratingRow holds the radio buttons visually
         // ratingButtons[] holds references for reading selection
         JLabel ratingLabel= new JLabel("Rating (1-5)");
-        ratingLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        ratingLabel.setFont(new Font("Arial Black", Font.PLAIN, 13));
         ratingLabel.setForeground(GUIColors.LIGHT);
         ratingLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -170,7 +170,7 @@ public class GameDescriptionPanel extends JPanel
         reviewList=new JList<>();
         reviewList.setBackground(GUIColors.DARK);
         reviewList.setForeground(GUIColors.LIGHT);
-        reviewList.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        reviewList.setFont(new Font("Arial Black", Font.PLAIN, 13));
         reviewList.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JScrollPane reviewScroll = new JScrollPane(reviewList);
@@ -244,23 +244,23 @@ public class GameDescriptionPanel extends JPanel
         infoScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         nameLabel = new JLabel("Game");
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD,22));
+        nameLabel.setFont(new Font("Arial Black", Font.BOLD,22));
         nameLabel.setForeground(GUIColors.LIGHT);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         yearLabel = new JLabel("Published: ?");
-        yearLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        yearLabel.setFont(new Font("Arial Black", Font.PLAIN, 14));
         yearLabel.setForeground(GUIColors.LIGHT);
         yearLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         playerLabel = new JLabel("Players: ? - ?");
-        playerLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        playerLabel.setFont(new Font("Arial Black", Font.PLAIN, 14));
         playerLabel.setForeground(GUIColors.LIGHT);
         playerLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         //description box
         description= new JTextArea("Description");
-        description.setFont(new Font("Segoe UI", Font.PLAIN,13));
+        description.setFont(new Font("Arial Black", Font.PLAIN,13));
         description.setForeground(GUIColors.LIGHT);
         description.setBackground(GUIColors.DARK);
         //auto line size of description area depending on text
@@ -271,12 +271,12 @@ public class GameDescriptionPanel extends JPanel
 
         //set categories and mechanics on page
         categoriesLabel = new JLabel("Categories");
-        categoriesLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        categoriesLabel.setFont(new Font("Arial Black", Font.PLAIN, 13));
         categoriesLabel.setForeground(GUIColors.LIGHT);
         categoriesLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         mechanicsLabel = new JLabel("Mechanics");
-        mechanicsLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        mechanicsLabel.setFont(new Font("Arial Black", Font.PLAIN, 13));
         mechanicsLabel.setForeground(GUIColors.LIGHT);
         mechanicsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 

@@ -45,4 +45,3 @@ public class Admin extends User
         userDB.setAdmin(username, isAdmin);
     }
 }
-

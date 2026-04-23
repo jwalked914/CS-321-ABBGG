@@ -5,11 +5,10 @@ import model.Game;
 
 /**
  * Represents a database of board games that provides access to and
- * operations on a collection of {@link Game} objects.
+ * operations on a collection of Game objects.
  *
- * <p>The database acts as a container for games loaded from an external
- * source (such as an XML parser) and serves as the primary data source
- * for queries and user collections.</p>
+ * The database acts as a container for games loaded from an external
+ * source and serves as the primary data source for queries and user collections.
  */
 public class GameDatabase
 {
@@ -21,7 +20,7 @@ public class GameDatabase
     protected HashMap<String, HashSet<Game>> mechanicMap;
 
     /**
-     * Constructs a master game database of model.Game objects.
+     * Constructs a master game database of Game objects.
      * @param gameDB parsed boardgame array list
      */
     public GameDatabase(ArrayList<Game> gameDB)
@@ -54,7 +53,6 @@ public class GameDatabase
             System.out.println(g);
         }
     }
-
 
     /**
      * Returns a copy of a list of all games within a game database.
@@ -332,8 +330,6 @@ public class GameDatabase
      */
     private void buildCategoryAndMechanicSets()
     {
-
-
         allCategories = new HashSet<>();
         allMechanics = new HashSet<>();
 

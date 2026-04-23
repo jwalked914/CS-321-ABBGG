@@ -14,22 +14,22 @@ import java.util.List;
 
 /**
  * A browser panel implementation for displaying the full game database.
- * Extends BrowserPanel and provides game-specific implementations
- * of the Template Method primitive operations.
  * Design Pattern:
- * Template Method — implements the primitive operations
- * defined in BrowserPanel to display game cards instead of collections.
+ * Template Method
+ * This class defines game spec behavior for BrowserPanel framework
+ * It defines how games are displayed, filtered, searched, and interacted with,
+ * while reusing the shared UI structure from the parent class(Browser Panel).
  */
 public class GameBrowserPanel extends BrowserPanel
 {
     private GameCardListener cardListener;
     private final GameDatabase gameDB;
     private final User user;
-    private List<GameCard> gameCards = new ArrayList<>();
+    private final List<GameCard> gameCards = new ArrayList<>();
     private List<Game> filteredGames;
     private String currentQuery = "";
-    private Set<String> selectedCategories = new HashSet<>();
-    private Set<String> selectedMechanics = new HashSet<>();
+    private final Set<String> selectedCategories = new HashSet<>();
+    private final Set<String> selectedMechanics = new HashSet<>();
 
     /**
      * Constructs the game browser panel by invoking the parent layout algorithm.
@@ -42,16 +42,8 @@ public class GameBrowserPanel extends BrowserPanel
         filteredGames = gameDB.getAllGames();
         buildGameCards();
         updateTitle(getTitle());
+        updateFilterButton();
         refresh();
-
-        // Wait until component is actually visible on screen
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            @Override
-            public void componentShown(java.awt.event.ComponentEvent e) {
-                updateFilterButton();
-                removeComponentListener(this);
-            }
-        });
     }
     /**
      * Returns the title for the games panel.
@@ -76,15 +68,18 @@ public class GameBrowserPanel extends BrowserPanel
         return "Search for Game";
     }
     /**
-     * Builds and returns a single game card for the given index.
+     * Return prebuilt GameCard associated with game in filtered list
+     * Cache GameCard objects to avoid remaking UI components during filtering,
+     * preserving event listeners
      * @param index the position of the card in the grid
-     * @return a viewAndControl.RoundedPanel displaying the game label
+     * @return a RoundedPanel displaying the game label
      */
     public JPanel buildCard(int index)
     {
         Game game = filteredGames.get(index);
         for (GameCard card : gameCards)
         {
+            // assume filteredGames and gameCards are built from the same Game objects
             if (card.getGame() == game)
                 return card;
         }
@@ -94,10 +89,11 @@ public class GameBrowserPanel extends BrowserPanel
      *  Builds and returns filter dropdown with the categories and mechanics
      *  checkboxes and the apply and clear buttons.
      *
-     * @return  a JPopUpMenu containing the filter controls
+     * @return a JPopUpMenu containing the filter controls
      */
     @Override
-    public JPopupMenu buildFilterPanel() {
+    public JPopupMenu buildFilterPanel()
+    {
         JPopupMenu dropdown = new JPopupMenu();
         dropdown.setBackground(GUIColors.CREAM);
 
@@ -113,11 +109,12 @@ public class GameBrowserPanel extends BrowserPanel
         Collections.sort(categories);
         HashMap<String, JCheckBox> categoryCheckboxMap = new HashMap<>();
 
-        for (String cat : categories) {
+        for (String cat : categories)
+        {
             JCheckBox box = new JCheckBox(cat);
             box.setBackground(GUIColors.CREAM);
             box.setForeground(GUIColors.DARK);
-            box.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            box.setFont(new Font("Arial Black", Font.PLAIN, 12));
             box.setSelected(selectedCategories.contains(cat));
             categoryCheckboxMap.put(cat, box);
             catPanel.add(box);
@@ -130,7 +127,7 @@ public class GameBrowserPanel extends BrowserPanel
                 "Categories",
                 TitledBorder.LEFT,
                 TitledBorder.TOP,
-                new Font("Segoe UI", Font.BOLD, 12),
+                new Font("Arial Black", Font.BOLD, 12),
                 GUIColors.DARK
         ));
         catScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -147,7 +144,7 @@ public class GameBrowserPanel extends BrowserPanel
             JCheckBox box = new JCheckBox(mech);
             box.setBackground(GUIColors.CREAM);
             box.setForeground(GUIColors.DARK);
-            box.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            box.setFont(new Font("Arial Black", Font.PLAIN, 12));
             box.setSelected(selectedMechanics.contains(mech));
             mechanicCheckboxMap.put(mech, box);
             mechPanel.add(box);
@@ -160,12 +157,13 @@ public class GameBrowserPanel extends BrowserPanel
                 "Mechanics",
                 TitledBorder.LEFT,
                 TitledBorder.TOP,
-                new Font("Segoe UI", Font.BOLD, 12),
+                new Font("Arial Black", Font.BOLD, 12),
                 GUIColors.DARK
         ));
         mechScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        catScroll.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        catScroll.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI()
+        {
             @Override
             protected void configureScrollBarColors() {
                 this.thumbColor = GUIColors.DARK;
@@ -173,7 +171,8 @@ public class GameBrowserPanel extends BrowserPanel
             }
         });
 
-        mechScroll.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        mechScroll.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI()
+        {
             @Override
             protected void configureScrollBarColors() {
                 this.thumbColor = GUIColors.DARK;
@@ -197,9 +196,10 @@ public class GameBrowserPanel extends BrowserPanel
         JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonRow.setBackground(GUIColors.CREAM);
 
+        //Resets all filter selections and restores full dataset view
         RoundedButton clearButton = new RoundedButton("Clear", 100, 50);
         clearButton.setPreferredSize(new Dimension(120, 35));
-        clearButton.addActionListener(e ->
+        clearButton.addActionListener(event ->
         {
             selectedCategories.clear();
             selectedMechanics.clear();
@@ -210,9 +210,10 @@ public class GameBrowserPanel extends BrowserPanel
             dropdown.setVisible(false);
         });
 
+        //Reads selected filter selections and rebuilds filtered game list
         RoundedButton applyButton = new RoundedButton("Apply", 100, 50);
         applyButton.setPreferredSize(new Dimension(120, 35));
-        applyButton.addActionListener(e ->
+        applyButton.addActionListener(event ->
         {
             selectedCategories.clear();
             for (String cat : categoryCheckboxMap.keySet()) {
@@ -240,7 +241,8 @@ public class GameBrowserPanel extends BrowserPanel
         return dropdown;
     }
     /**
-     *  Applies search query, category, and mechanic filters to rebuild filtered games list.
+     *  Applies search query, category, and mechanic filters to build
+     *  the final visible game list before refreshing UI
      */
     private void applyFilters()
     {
@@ -253,6 +255,7 @@ public class GameBrowserPanel extends BrowserPanel
         filteredGames = result;
         refresh();
     }
+    // Allows external components to respond when game selected
     public interface GameCardListener
     {
         void onGameSelected(Game game);
@@ -267,7 +270,7 @@ public class GameBrowserPanel extends BrowserPanel
         this.cardListener = listener;
     }
     /**
-     *  Updates the current search query and applies all active filters.
+     *  Updates the current search query and re-applies all active filters (search,category,mechanics).
      *
      * @param query the current search string, empty if clear
      */
@@ -288,7 +291,7 @@ public class GameBrowserPanel extends BrowserPanel
     }
 
     /**
-     * Builds and caches all viewAndControl.GameCard instances from the current filtered games list.
+     * Builds and caches all GameCard instances from the current filtered games list.
      * Each card is initialized with its remove and click callbacks.
      */
     private void buildGameCards()
@@ -302,6 +305,8 @@ public class GameBrowserPanel extends BrowserPanel
                     gameDB instanceof UserCollection,
                     user,
                     gameDB,
+                    //Remove game from filtered data set + cached UI components
+                    //makes sure model and UI are in sync before refreshing
                     () -> {
                         filteredGames.remove(game);
                         gameCards.removeIf(c -> c.getGame() == game);
