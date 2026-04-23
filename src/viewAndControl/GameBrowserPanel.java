@@ -52,7 +52,7 @@ public class GameBrowserPanel extends BrowserPanel
     /**
      * Returns the title for the games panel.
      *
-     * @return "ABBGG Games Database" for Master Database or collection name if model.User Collection
+     * @return "ABB Games Home" for Master Database or collection name if model.User Collection
      */
     public String getTitle()
     {
@@ -61,7 +61,7 @@ public class GameBrowserPanel extends BrowserPanel
             return ((UserCollection) gameDB).getName();
         }
 
-        return "ABBGG Home";
+        return "ABB Games Home";
     }
     /**
      * Returns the placeholder text for the games search bar.
