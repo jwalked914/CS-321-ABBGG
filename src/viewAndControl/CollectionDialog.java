@@ -13,13 +13,12 @@ import java.util.ArrayList;
  * A dialog window used for managing a user's game collections.
  * It allows the user to either add a game to one of their collections
  * or remove it if it is already inside one.
- *
  * When adding, the user can also create a new collection directly from the dialog.
  */
 public class CollectionDialog extends JDialog
 {
     /**
-     * Constructs a viewAndControl.CollectionDialog for adding or removing a game from a user's collections.
+     * Constructs a CollectionDialog for adding or removing a game from a user's collections.
      * Displays a scrollable list of the user's collections as buttons.
      * Includes a "New" button when adding to allow creation of a new collection on the fly.
      *
@@ -39,8 +38,8 @@ public class CollectionDialog extends JDialog
         content.setBackground(GUIColors.DARK);
         content.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel title = new JLabel(isAdding ? "Add to Collection" : "Remove from Collection");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        JLabel title = new JLabel("Add to Collection");
+        title.setFont(new Font("Arial Black", Font.BOLD, 16));
         title.setForeground(GUIColors.LIGHT);
 
         JPanel listPanel = new JPanel();
@@ -51,21 +50,24 @@ public class CollectionDialog extends JDialog
 
         for (UserCollection collection : collections)
         {
-            RoundedButton button = new RoundedButton(collection.getName(), 50, 35);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-
+            RoundedButton collectionActionButton = new RoundedButton(collection.getName(), 50, 35);
+            collectionActionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            collectionActionButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+            //if the collection already contains the game disable the collectionActionButton
+            // adding: disable the ability to add game if already in the collection
             if (isAdding && collection.containsGame(game))
             {
-                button.setEnabled(false);
+                collectionActionButton.setEnabled(false);
             }
+            // removing: disable the ability to remove game if the game is not in the collection
             else if (!isAdding && !collection.containsGame(game))
             {
-                button.setEnabled(false);
+                collectionActionButton.setEnabled(false);
             }
+            // otherwiseaction is valid and user can add/remove game
             else
             {
-                button.addActionListener(event ->
+                collectionActionButton.addActionListener(event ->
                 {
                     if (isAdding)
                     {
@@ -93,7 +95,7 @@ public class CollectionDialog extends JDialog
                 });
             }
 
-            listPanel.add(button);
+            listPanel.add(collectionActionButton);
             listPanel.add(Box.createVerticalStrut(6));
         }
 
@@ -152,7 +154,7 @@ public class CollectionDialog extends JDialog
 
             JLabel nameLabel = new JLabel("Collection Name");
             nameLabel.setForeground(GUIColors.LIGHT);
-            nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            nameLabel.setFont(new Font("Arial Black", Font.PLAIN, 13));
             nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             JTextField nameField = new JTextField();
@@ -160,7 +162,7 @@ public class CollectionDialog extends JDialog
             nameField.setForeground(GUIColors.LIGHT);
             nameField.setCaretColor(GUIColors.LIGHT);
             nameField.setBorder(new EmptyBorder(5, 8, 5, 8));
-            nameField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            nameField.setFont(new Font("Arial Black", Font.PLAIN, 13));
             nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
             nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
 
@@ -170,6 +172,9 @@ public class CollectionDialog extends JDialog
             RoundedButton confirmButton = new RoundedButton("Create", 100, 30);
             RoundedButton cancelButton = new RoundedButton("Cancel", 100, 30);
 
+            // Create a new collection from user input and add the selected game to it.
+            // If the input name is valid new collection is created+game is added to it.
+            // The dialog is then closed regardless of input validity.
             confirmButton.addActionListener(eventConfirm ->
             {
                 String newName = nameField.getText().trim();
