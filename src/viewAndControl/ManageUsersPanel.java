@@ -90,9 +90,7 @@ public class ManageUsersPanel extends JPanel
             promoteButton.setFont(new Font("Arial Black", Font.PLAIN, 12));
             promoteButton.addActionListener(event ->
             {
-                //get user admin status
-                Admin admin = (Admin) currentUser;
-                admin.setAdminStatus(user.getUsername(), !user.getIsAdmin(), userDatabase);
+                userDatabase.setAdmin(user.getUsername(),!user.getIsAdmin());
                 refresh(); //rebuild screen to show the changes
             });
 
@@ -110,8 +108,10 @@ public class ManageUsersPanel extends JPanel
 
                 if (confirmDelete==JOptionPane.YES_OPTION)
                 {
-                    Admin admin = (Admin) currentUser;
-                    admin.deleteUser(user.getUsername(), userDatabase);
+                    //userDatabase.deleteUser(user.getUsername());
+                    //Admin admin = (Admin) currentUser;
+                    userDatabase.deleteUser(user.getUsername());
+                    //admin.deleteUser(user.getUsername(), userDatabase);
                     refresh();
                 }
             });
