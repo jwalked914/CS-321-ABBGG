@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *  Represents a board game with its core attributes.
- *  Each model.Game object stores its unique ID, name, description, publication year,
+ *  Each Game object stores its unique ID, name, description, publication year,
  *  minimum and maximum player counts, and lists of categories and mechanics.
  */
 public class Game {
