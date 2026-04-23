@@ -2,7 +2,7 @@ package viewAndControl;
 
 import java.awt.Color;
 /**
-* This class holds all the colors used throughput the application.
+* This class holds all the colors used throughout the application.
 */
 public class GUIColors
 {
