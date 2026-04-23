@@ -19,6 +19,10 @@ import java.util.List;
  * This class defines game spec behavior for BrowserPanel framework
  * It defines how games are displayed, filtered, searched, and interacted with,
  * while reusing the shared UI structure from the parent class(Browser Panel).
+ *
+ * Observer Pattern
+ * This class holds the GameCardListener interface to notify MainFrame when a game card is clicked
+ * enabling decouple navigation between components.
  */
 public class GameBrowserPanel extends BrowserPanel
 {

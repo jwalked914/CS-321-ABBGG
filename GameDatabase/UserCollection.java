@@ -5,6 +5,11 @@ import data.GameDatabase;
  * UserCollection class allows users to store games
  * and create collections. It also inherits from the GameDatabase to access the full game library
  *This class will have methods that add, remove, and shows that it contains the users games
+ *
+ * Design Pattern:
+ * Composite Pattern
+ * UserCollection extends GameDatabase. This enables GameBrowserPanel
+ * to accept either GameDatabase or UserCollection and use the same filtering/
  */
 public class UserCollection extends GameDatabase
 {

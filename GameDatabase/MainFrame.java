@@ -18,7 +18,11 @@ import java.util.ArrayList;
  *  collection browser, settings, and game description views.
  *
  *  Design Pattern:
- *  Facade Patter-centralizes navigation logic and manages transitions between different UI views.
+ *  Observer Pattern
+ *  MainFrame registers as a listener to GameBrowserPanel
+ *  and CollectionBrowserPanel by GameCardListener and CollectionCardListener
+ *  interfaces. When users click cards, MainFrame receives notifications and
+ *  coordinates navigation without panels knowing about MainFrame directly.
  */
 public class MainFrame extends JFrame
 {
