@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <users>
-    <user isAdmin="true" password="pie" profilePicture="profile_pictures\banana.png" username="banana">
+    <user isAdmin="true" password="pie" profilePicture="profile_pictures\banana.jpg" username="banana">
         <collections>
             <collection name="examples">
                 <gameId value="316554"/>
@@ -12,11 +12,15 @@
         </collections>
         <reviews/>
     </user>
+    <user isAdmin="false" password="123" profilePicture="" username="apple">
+        <collections/>
+        <reviews/>
+    </user>
     <user isAdmin="true" password="apple" profilePicture="" username="bread">
         <collections/>
         <reviews/>
     </user>
-    <user isAdmin="false" password="apple" profilePicture="profile_pictures\pineapple.jpg" username="pineapple">
+    <user isAdmin="true" password="apple" profilePicture="profile_pictures\pineapple.jpg" username="pineapple">
         <collections>
             <collection name="banana">
                 <gameId value="374173"/>
@@ -25,18 +29,6 @@
         <reviews/>
     </user>
     <user isAdmin="false" password="apple" profilePicture="" username="nummy">
-        <collections/>
-        <reviews/>
-    </user>
-    <user isAdmin="false" password="Password" profilePicture="profile_pictures\tickler.png" username="tickler">
-        <collections/>
-        <reviews/>
-    </user>
-    <user isAdmin="false" password="apple" profilePicture="" username="banana1234">
-        <collections/>
-        <reviews/>
-    </user>
-    <user isAdmin="false" password="branch" profilePicture="" username="newUserTest">
         <collections/>
         <reviews/>
     </user>
