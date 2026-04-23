@@ -12,7 +12,7 @@ import model.User;
 
 /**
  * Displays the login screen for the ABBG Board Games application.
- * Handles user authentication by validating credentials against the data.UserDatabase.
+ * Handles user authentication by validating credentials against the UserDatabase.
  * On successful login, closes the login window and opens the main screen.
  *
  */
@@ -171,7 +171,6 @@ public class LoginScreen
 
         passwordField.addActionListener(loginButton.getActionListeners()[0]);
 
-
         //assemble login parts
         loginPanel.add(Box.createVerticalStrut(4));
         loginPanel.add(subtitle);
@@ -197,15 +196,15 @@ public class LoginScreen
     /**
      * Wraps a component in a left-aligned panel for consistent layout.
      *
-     * @param c the component to align
+     * @param component the component to align
      * @return a JPanel containing the component aligned to the left
      */
-    private JPanel leftAlign(JComponent c)
+    private JPanel leftAlign(JComponent component)
     {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        p.setOpaque(false);
-        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, c.getPreferredSize().height + 2));
-        p.add(c);
-        return p;
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, component.getPreferredSize().height + 2));
+        panel.add(component);
+        return panel;
     }
 }
