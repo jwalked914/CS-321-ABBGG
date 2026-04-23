@@ -11,12 +11,12 @@ import model.UserCollection;
 import model.Review;
 
 /**
- * Parses a board game XML file and converts its contents into
- * {@link Game} objects.
- *
- * <p>This class is responsible only for reading and interpreting XML data.
- * It does not store or manage games after parsing. The resulting list
- * is intended to be passed to a {@code data.GameDatabase}.</p>
+ * Parses a board game XML file converting its content into Game objects,
+ * parses users data XML file converting its content into User objects,
+ * and parses review XML into Review objects
+ * This class is responsible only for reading and interpreting XML data.
+ * It does not store or manage games after parsing. TThe parsed data is returned
+ * to database classes for storage.
  */
 public class FileScannerXML
 {
@@ -36,9 +36,9 @@ public class FileScannerXML
     }
 
     /**
-     * Parses the XML file and returns a list of model.Game objects.
+     * Parses the XML file and returns a list of Game objects.
      *
-     * @return an ArrayList of model.Game objects extracted from the XML file
+     * @return an ArrayList of Game objects extracted from the XML file
      * @throws RuntimeException if there is an error reading or parsing the file
      */
     public ArrayList<Game> parseGamesFromXML()
@@ -73,7 +73,12 @@ public class FileScannerXML
 
         return games;
     }
-
+    /**
+     * Parses the XML file and returns a list of users.
+     *
+     * @return list of users extracted from XML
+     * @throws RuntimeException if parsing fails
+     */
     public ArrayList<User> parseUsersFromXML()
     {
         ArrayList<User> users=new ArrayList<>();
@@ -83,7 +88,7 @@ public class FileScannerXML
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document userDoc=builder.parse(xmlFile);
             userDoc.getDocumentElement().normalize();
-
+            // get all user nodes
             NodeList userList=userDoc.getElementsByTagName("user");
             for (int i=0; i<userList.getLength();i++)
             {
@@ -93,6 +98,7 @@ public class FileScannerXML
                     continue;
                 }
                 Element user = (Element) node;
+                //parse each user element
                 users.add(parseUserElement(user));
             }
         }
@@ -104,11 +110,11 @@ public class FileScannerXML
     }
 
     /**
-     *  Parses a single XML element representing a game and constructs {link @model.Game}
+     *  Parses a single XML element representing a game and constructs Game
      *  object.
      *
      * @param gameElement an XML parent node
-     * @return a {link @model.Game} object with attributes populated by the XML
+     * @return a Game object with attributes populated by the XML
      */
     private Game parseGameElement(Element gameElement)
     {
@@ -128,21 +134,22 @@ public class FileScannerXML
     }
 
     /**
-     *  Parses a single XML element representing a user and constructs {@link User}
+     *  Parses a single XML element representing a user and constructs User
      *  object.
      *
      * @param userElement an XML parent node
-     * @return a {@link User} object with attributes populated by the XML
+     * @return a User object with attributes populated by the XML
      */
     private User parseUserElement(Element userElement)
     {
+        // read basic user attributes
         String username=userElement.getAttribute("username");
         String password=userElement.getAttribute("password");
         String adminCheck=userElement.getAttribute("isAdmin");
         boolean isAdmin=Boolean.parseBoolean(adminCheck);
 
         String profilePicturePath=userElement.getAttribute("profilePicture");
-
+        // parse collections
         NodeList collectionList=userElement.getElementsByTagName("collection");
         ArrayList<UserCollection> collections=new ArrayList<>();
         for (int i=0; i<collectionList.getLength();i++)
@@ -153,6 +160,7 @@ public class FileScannerXML
             {
                 Element collectionElement=(Element) collectionNode;
                 String collectionName=collectionElement.getAttribute("name");
+                // build collection object
                 UserCollection collection=new UserCollection(collectionName);
                 NodeList gameIdList=collectionElement.getElementsByTagName("gameId");
                 for (int j=0; j<gameIdList.getLength();j++)
@@ -162,6 +170,7 @@ public class FileScannerXML
                     {
                         Element gameElement= (Element) gameNode;
                         int gameId=Integer.parseInt(gameElement.getAttribute("value"));
+                        // resolve game reference using game database
                         Game game=gameDatabase.getGameById(gameId);
                         if (game!=null)
                         {
@@ -172,6 +181,7 @@ public class FileScannerXML
                 collections.add(collection);
             }
         }
+        // create user with parsed collections
         User user=new User(username,password, isAdmin,collections, new ArrayList<>());
 
         if (profilePicturePath!=null && !profilePicturePath.isEmpty())
@@ -217,7 +227,7 @@ public class FileScannerXML
 
         if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
         {
-            return ((Element) node).getTextContent();
+            return node.getTextContent();
         }
 
         return defaultValue;
@@ -253,9 +263,16 @@ public class FileScannerXML
         }
         return stringList;
     }
-
+    /**
+     * Retrieves all reviews associated with a specific game.
+     *
+     * @param reviewsXMLPath path to reviews XML file
+     * @param game the game whose reviews should be loaded
+     * @return list of reviews for the game (empty if none exist)
+     */
     public ArrayList<Review> getReviewForGame(String reviewsXMLPath, Game game)
     {
+        // load reviews file
         ArrayList<Review> reviewList=new ArrayList<>();
         File reviewFile= new File(reviewsXMLPath);
         if (!reviewFile.exists())
@@ -266,7 +283,7 @@ public class FileScannerXML
             DocumentBuilderFactory reviewFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder reviewBuilder = reviewFactory.newDocumentBuilder();
             Document reviewDoc = reviewBuilder.parse(reviewsXMLPath);
-
+            // find all game review nodes
             NodeList gameReviews = reviewDoc.getElementsByTagName("gameReview");
 
             for (int i=0; i<gameReviews.getLength();i++)
@@ -276,6 +293,7 @@ public class FileScannerXML
                 int gameId=game.getID();
                 if(id==gameId)
                 {
+                    // parse user reviews
                     NodeList userReviews=gameReview.getElementsByTagName("userReview");
                     for (int j=0;j<userReviews.getLength();j++)
                     {
@@ -283,6 +301,7 @@ public class FileScannerXML
                         String username=userReview.getAttribute("username");
                         int rating = Integer.parseInt(userReview.getAttribute("rating"));
                         String text=userReview.getAttribute("text");
+                        // create Review object and add to list
                         reviewList.add((new Review(gameId, username, rating, text)));
                     }
                     break; //found desired game
@@ -297,4 +316,3 @@ public class FileScannerXML
     }
 
 }
-
