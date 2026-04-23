@@ -61,31 +61,7 @@ public class UserDatabase
             userList.put(user.getUsername(),user);
         }
     }
-    /**
-     * Loads a single user fresh from XML file.
-     * Used to get clean state on login.
-     *
-     * @param username the username entered
-     */
-    private User loadUserOnLogin(String username)
-    {
-        File xmlFile=userXMLPath;
-        if (!xmlFile.exists()) {
-            return null;
-        }
-        // reload users
-        FileScannerXML scanner = new FileScannerXML(xmlFile, gameDatabase);
-        ArrayList<User> userArrayList = scanner.parseUsersFromXML();
-        //get user that we want to laod in
-        for (User user : userArrayList)
-        {
-            if (user.getUsername().equals(username))
-            {
-                return user; //return fresh user object from XML (mimic potential unsaved user changes)
-            }
-        }
-        return null; // if no user found return
-    }
+
     /**
      * Validates a user's login credentials.
      *
@@ -105,8 +81,8 @@ public class UserDatabase
         {
             return null; //wrong password
         }
-        //if valid return fresh user to create new session
-        return loadUserOnLogin(username);
+
+        return user;
     }
     /**
      * Checks whether a username is already taken.
