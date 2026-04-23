@@ -17,7 +17,7 @@ public class GameCard extends JPanel{
     private final RoundedPanel card;
 
     /**
-     * Constructs a viewAndControl.GameCard component displaying a game's thumbnail, name, and action button.
+     * Constructs a GameCard component displaying a game's thumbnail, name, and action button.
      * Loads the game thumbnail asynchronously
      * The action button behavior differs based on whether the card is in a collection view or master database view.
      *
@@ -40,7 +40,7 @@ public class GameCard extends JPanel{
         JLabel imageLabel = new JLabel("Loading...", SwingConstants.CENTER);
         imageLabel.setForeground(GUIColors.DARK);
         imageLabel.setForeground(GUIColors.DARK);
-        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        imageLabel.setFont(new Font("Arial Black", Font.PLAIN, 10));
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         new SwingWorker<ImageIcon, Void>()
@@ -74,7 +74,7 @@ public class GameCard extends JPanel{
         }.execute();
 
         JLabel nameLabel = new JLabel(truncate(game.getName()), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        nameLabel.setFont(new Font("Arial Black", Font.BOLD, 12));
         nameLabel.setForeground(GUIColors.DARK);
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
