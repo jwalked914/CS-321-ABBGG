@@ -1,6 +1,4 @@
-
 package viewAndControl;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +12,8 @@ import model.UserCollection;
  * open, or delete collections from this view.
  *
  * Design Pattern:
- * Template Method — extends BrowserPanel and implements its primitive
+ * Template Method
+ * This class extends BrowserPanel and implements its primitive
  * operations to display collection cards instead of generic content.
  * It also uses a simple listener pattern to notify when a collection
  * is selected.
@@ -26,7 +25,7 @@ public class CollectionBrowserPanel extends BrowserPanel
     private CollectionCardListener cardListener;
 
     /**
-     * Constructs a viewAndControl.CollectionBrowserPanel for the given user.
+     * Constructs a CollectionBrowserPanel for the given user.
      * Builds the full layout including header and collection card grid.
      *
      * @param user the logged-in user whose collections will be displayed
@@ -39,15 +38,6 @@ public class CollectionBrowserPanel extends BrowserPanel
         updateTitle(getTitle());
         updateFilterButton();
         refresh();
-
-        this.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e)
-            {
-                requestFocusInWindow();
-            }
-        });
     }
     @Override
     public String getTitle()
@@ -71,7 +61,7 @@ public class CollectionBrowserPanel extends BrowserPanel
         return false;
     }
     /**
-     * Returns an empty JPopupMenu as filtering is not supported in viewAndControl.CollectionBrowserPanel.
+     * Returns an empty JPopupMenu as filtering is not supported in CollectionBrowserPanel.
      *
      * @return an empty JPopupMenu
      */
@@ -119,7 +109,7 @@ public class CollectionBrowserPanel extends BrowserPanel
      * Each card displays the collection name, game count, and a remove button.
      *
      * @param index the position of the card in the grid
-     * @return a viewAndControl.RoundedPanel displaying the collection card
+     * @return a RoundedPanel displaying the collection card
      */
     @Override
     public JPanel buildCard(int index)
@@ -133,16 +123,16 @@ public class CollectionBrowserPanel extends BrowserPanel
         UserCollection collection = filteredCollections.get(index);
 
         JLabel imageLabel = new JLabel("<3", SwingConstants.CENTER);
-        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 60));
+        imageLabel.setFont(new Font("Arial Black", Font.PLAIN, 60));
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel nameLabel = new JLabel(truncate(collection.getName()), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI",Font.BOLD,12));
+        nameLabel.setFont(new Font("Arial Black",Font.BOLD,12));
         nameLabel.setForeground(GUIColors.DARK);
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel countLabel = new JLabel(collection.getAllGames().size()+ " games", SwingConstants.CENTER);
-        countLabel.setFont(new Font("Segoe UI", Font.PLAIN,11));
+        countLabel.setFont(new Font("Arial Black", Font.PLAIN,11));
         countLabel.setForeground(GUIColors.DARK);
         countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
