@@ -16,7 +16,11 @@
         <collections/>
         <reviews/>
     </user>
-    <user isAdmin="true" password="apple" profilePicture="" username="bread">
+    <user isAdmin="true" password="Admin" profilePicture="" username="BethAllen">
+        <collections/>
+        <reviews/>
+    </user>
+    <user isAdmin="true" password="apple" profilePicture="profile_pictures\bread.jpg" username="bread">
         <collections/>
         <reviews/>
     </user>
