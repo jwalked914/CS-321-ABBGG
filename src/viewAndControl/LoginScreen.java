@@ -55,7 +55,7 @@ public class LoginScreen
      */
     private JFrame buildFrame()
     {
-        JFrame frame= new JFrame("ABBG Board Games - Login");
+        JFrame frame= new JFrame("ABB Games - Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Outer background panel to fill the whole window with CREAM
@@ -88,7 +88,7 @@ public class LoginScreen
 
         //welcome tag
         //Displays the application title
-        JLabel welcomeTag = new JLabel("ABBGG Board Games");
+        JLabel welcomeTag = new JLabel("ABB Games");
         welcomeTag.setFont(new Font("Arial Black", Font.BOLD, 22));
         welcomeTag.setForeground(GUIColors.DARK);
         welcomeTag.setAlignmentX(Component.CENTER_ALIGNMENT);
