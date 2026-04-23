@@ -9,13 +9,18 @@ import java.awt.*;
 
 /**
  * Displays the account creation screen for the ABBG Board Games application.
- * Handles user creation by adding credentials to the data.UserDatabase.
+ * Handles user creation by adding credentials to the UserDatabase.
  * On successful account creation, closes the account creation window and opens the main screen.
+ * Design Pattern:
+ * Observer Pattern (Java Swing)
+ * Subject: createAccountButton
+ * Observer: This button use a ActionListener instance
+ * When a button is clicked it updates the userDatabase and userXML to
+ * create a new User object.
  *
  */
 public class AccountCreation
 {
-
     /**Input field for the user's username */
     private JTextField     usernameField;
     /** Input field for the user's password */
@@ -27,7 +32,7 @@ public class AccountCreation
     /** The user database used to place the user's newly made info */
     private final UserDatabase userDatabase;
 
-    /** model.Game library to pass through to the login screen */
+    /** Game library to pass through to the login screen */
     private final GameDatabase gameLibrary;
     /** Path to the reviews XML, passed through to the login screen */
     private final String reviewsXMLPath;
@@ -86,22 +91,22 @@ public class AccountCreation
         //welcome screen for creating account
         JLabel welcomeCreationTag = new JLabel("Account Creation");
         welcomeCreationTag.setAlignmentX(Component.CENTER_ALIGNMENT);
-        welcomeCreationTag.setFont(new Font("Segoe UI", Font.BOLD,30));
+        welcomeCreationTag.setFont(new Font("Arial Black", Font.BOLD,30));
         welcomeCreationTag.setForeground(GUIColors.DARK);
 
         //username field
         JLabel userLabel= new JLabel("Username");
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        userLabel.setFont(new Font("Arial Black", Font.BOLD, 11));
         userLabel.setForeground(GUIColors.DARK);
 
         //password tag
         JLabel passLabel= new JLabel("Password");
-        passLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        passLabel.setFont(new Font("Arial Black", Font.BOLD, 11));
         passLabel.setForeground(GUIColors.DARK);
 
         // confirm password field
         JLabel confirmLabel= new JLabel("Confirm Password");
-        confirmLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        confirmLabel.setFont(new Font("Arial Black", Font.BOLD, 11));
         confirmLabel.setForeground(GUIColors.DARK);
 
         usernameField = new JTextField(80);
@@ -110,7 +115,7 @@ public class AccountCreation
 
         //status label
         statusLabel=new JLabel(" ");
-        statusLabel.setFont(new Font("Segoe UI",Font.PLAIN,11));
+        statusLabel.setFont(new Font("Arial Black",Font.PLAIN,11));
         statusLabel.setForeground(GUIColors.ERR);
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -133,6 +138,12 @@ public class AccountCreation
             else if (username.length()>=15)
             {
                 statusLabel.setText("Username must be no more than 15 characters.");
+                statusLabel.revalidate();
+                statusLabel.repaint();
+            }
+            else if (password.length()<3 || password.length()>=25)
+            {
+                statusLabel.setText("Password must be 4-25 characters");
                 statusLabel.revalidate();
                 statusLabel.repaint();
             }
