@@ -2,32 +2,27 @@ package model;
 import data.GameDatabase;
 
 /**
- * Collection class allows users to store unlimited games
- * and create unlimited amount of collections
- * It also inherits from the data.GameDatabase to access the full game library
- */
-
-/**
- * model.UserCollection inherits data.GameDatabase
- * This class will have methods that add, remove, and shows that it contains the users games
+ * UserCollection class allows users to store games
+ * and create collections. It also inherits from the GameDatabase to access the full game library
+ *This class will have methods that add, remove, and shows that it contains the users games
+ *
+ * Design Pattern:
+ * Composite Pattern
+ * UserCollection extends GameDatabase. This enables GameBrowserPanel
+ * to accept either GameDatabase or UserCollection and use the same filtering
  */
 public class UserCollection extends GameDatabase
 {
     private String name;
-    //private final data.GameDatabase masterDB;
-
-
     /**
      *  This is a  constructor that creates an empty collection with a name.
      *  the masterDB will be used to check if the game is real and store the game into a collection and be used to retrieve it as well.
      */
-    public UserCollection(String name)//data.GameDatabase masterDB)
+    public UserCollection(String name)
     {
         super();
         this.name = name;
-        //this.masterDB = masterDB;
     }
-
 
     /**
      * This method Adds a game by ID to a collection
@@ -44,7 +39,6 @@ public class UserCollection extends GameDatabase
         }
         super.addGame(game);
     }
-
 
     /**
      * This checks if the game exists and if it already is not in the collection
